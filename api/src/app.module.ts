@@ -18,6 +18,7 @@ import {User} from "./users/entities/user.entity";
         username: configService.get<string>('MYSQLUSER'),
         password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
+        url: configService.get<string>('MYSQL_DATABASE_URL'),
         entities: [User],
         autoLoadEntities: true,
         synchronize: false,
