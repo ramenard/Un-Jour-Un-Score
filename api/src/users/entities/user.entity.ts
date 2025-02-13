@@ -17,10 +17,10 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ select: false })
   @Exclude()
   password: string;
 
-  @Column({ enum: RoleEnum, default: RoleEnum.USER })
+  @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
   role: RoleEnum;
 }

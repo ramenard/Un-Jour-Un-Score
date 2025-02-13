@@ -1,10 +1,10 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from './users/users.module';
-import {User} from "./users/entities/user.entity";
+import { User } from './users/entities/user.entity';
+import { SecurityModule } from './security/security.module';
 
 @Module({
   imports: [
@@ -21,18 +21,14 @@ import {User} from "./users/entities/user.entity";
         url: configService.get<string>('MYSQL_DATABASE_URL'),
         entities: [User],
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
     UsersModule,
+    SecurityModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_PIPE,
-      useFactory: () => new ValidationPipe({ transform: true }),
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}
