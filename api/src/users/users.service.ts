@@ -9,38 +9,40 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
   ) {}
 
   public create(registerDto: RegisterDto): Promise<User> {
-    return this.usersRepository.save(registerDto);
+    return this.userRepository.save(registerDto);
   }
 
   public findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.userRepository.find();
   }
 
-  public findOneByEmail(email: string): Promise<User> {
-    try {
-      return this.usersRepository.findOne({
-        where: { email },
-        select: ['id', 'username', 'email', 'password', 'role'],
-      });
-    } catch {
+  public async findOneByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'username', 'email', 'password', 'role'],
+    });
+    if (!user) {
       throw new NotFoundException();
     }
+
+    return user;
   }
 
-  public findOneById(id: string): Promise<User> {
-    try {
-      return this.usersRepository.findOne({ where: { id: id } });
-    } catch {
+  public async findOneById(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id: id } });
+    if (!user) {
       throw new NotFoundException();
     }
+
+    return user;
   }
 
   public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.usersRepository.update(id, updateUserDto);
+    await this.userRepository.update(id, updateUserDto);
     return this.findOneById(id);
   }
 }

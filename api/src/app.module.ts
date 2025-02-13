@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
 import { SecurityModule } from './security/security.module';
+import { GamesModule } from './games/games.module';
+import { Game } from './games/entities/game.entity';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { SecurityModule } from './security/security.module';
         password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
         url: configService.get<string>('MYSQL_DATABASE_URL'),
-        entities: [User],
+        entities: [User, Game],
         autoLoadEntities: true,
         synchronize: true,
       }),
@@ -27,6 +29,7 @@ import { SecurityModule } from './security/security.module';
     }),
     UsersModule,
     SecurityModule,
+    GamesModule,
   ],
   controllers: [],
   providers: [],

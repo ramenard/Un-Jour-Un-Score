@@ -23,4 +23,13 @@ export class User {
 
   @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
   role: RoleEnum;
+
+  @Column({ default: 0 })
+  gameCoins: number;
+
+  @Column({ default: 0 })
+  premiumCoins: number;
+
+  @Column({ default: 0 })
+  freeCoins: number;
 }
