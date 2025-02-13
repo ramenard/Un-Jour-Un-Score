@@ -7,6 +7,8 @@ import { User } from './users/entities/user.entity';
 import { SecurityModule } from './security/security.module';
 import { GamesModule } from './games/games.module';
 import { Game } from './games/entities/game.entity';
+import { BadgesModule } from './badges/badges.module';
+import { Badge } from './badges/entities/badge.entity';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { Game } from './games/entities/game.entity';
         password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
         url: configService.get<string>('MYSQL_DATABASE_URL'),
-        entities: [User, Game],
+        entities: [User, Game, Badge],
         autoLoadEntities: true,
         synchronize: true,
       }),
@@ -30,6 +32,7 @@ import { Game } from './games/entities/game.entity';
     UsersModule,
     SecurityModule,
     GamesModule,
+    BadgesModule,
   ],
   controllers: [],
   providers: [],

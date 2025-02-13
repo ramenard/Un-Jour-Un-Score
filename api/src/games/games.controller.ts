@@ -20,7 +20,7 @@ export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 
   @Post()
-  public create(@Body() createGameDto: CreateGameDto) {
+  public create(@Body() createGameDto: CreateGameDto): Promise<void> {
     return this.gamesService.create(createGameDto);
   }
 

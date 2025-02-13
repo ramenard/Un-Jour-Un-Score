@@ -12,8 +12,8 @@ export class GamesService {
     private readonly gameRepository: Repository<Game>,
   ) {}
 
-  public create(createGameDto: CreateGameDto): Promise<Game> {
-    return this.gameRepository.save(createGameDto);
+  public async create(createGameDto: CreateGameDto): Promise<void> {
+    await this.gameRepository.save(createGameDto);
   }
 
   public findAll(): Promise<Game[]> {
