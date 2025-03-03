@@ -17,7 +17,7 @@ export class UsersService {
   }
 
   public findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['obtainedBadges'] });
   }
 
   public async findOneByEmail(email: string): Promise<User> {
