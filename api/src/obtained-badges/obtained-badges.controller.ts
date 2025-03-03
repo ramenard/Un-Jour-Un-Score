@@ -1,7 +1,15 @@
-import {Controller, Get, Post, Body, Param, UseGuards, Query} from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { ObtainedBadgesService } from './obtained-badges.service';
 import { CreateObtainedBadgeDto } from './dto/create-obtained-badge.dto';
-import {SecurityGuard} from "../security/security.guard";
+import { SecurityGuard } from '../security/security.guard';
 
 @UseGuards(SecurityGuard)
 @Controller('obtained-badges')

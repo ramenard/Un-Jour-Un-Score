@@ -1,6 +1,6 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {User} from "../../users/entities/user.entity";
-import {Badge} from "../../badges/entities/badge.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { Badge } from '../../badges/entities/badge.entity';
 
 @Entity()
 export class ObtainedBadge {

@@ -1,6 +1,6 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import {ObtainedBadge} from "../../obtained-badges/entities/obtained-badge.entity";
+import { ObtainedBadge } from '../../obtained-badges/entities/obtained-badge.entity';
 
 export enum RoleEnum {
   ADMIN = 'admin',

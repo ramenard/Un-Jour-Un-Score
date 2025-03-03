@@ -10,7 +10,7 @@ import { Game } from './games/entities/game.entity';
 import { BadgesModule } from './badges/badges.module';
 import { Badge } from './badges/entities/badge.entity';
 import { ObtainedBadgesModule } from './obtained-badges/obtained-badges.module';
-import {ObtainedBadge} from "./obtained-badges/entities/obtained-badge.entity";
+import { ObtainedBadge } from './obtained-badges/entities/obtained-badge.entity';
 
 @Module({
   imports: [
