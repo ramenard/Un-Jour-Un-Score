@@ -9,5 +9,6 @@ import { GamesModule } from '../games/games.module';
   imports: [TypeOrmModule.forFeature([Leaderboard]), GamesModule],
   controllers: [LeaderboardsController],
   providers: [LeaderboardsService],
+  exports: [LeaderboardsService],
 })
 export class LeaderboardsModule {}

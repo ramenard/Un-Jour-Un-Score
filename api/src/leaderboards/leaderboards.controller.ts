@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { LeaderboardsService } from './leaderboards.service';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
 import { Leaderboard } from './entities/leaderboard.entity';
+import { SecurityGuard } from '../security/security.guard';
 
+@UseGuards(SecurityGuard)
 @Controller('leaderboards')
 export class LeaderboardsController {
   constructor(private readonly leaderboardsService: LeaderboardsService) {}

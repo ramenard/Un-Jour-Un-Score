@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ObtainedBadge } from '../../obtained-badges/entities/obtained-badge.entity';
+import { HasPlayed } from '../../has-played/entities/has-played.entity';
 
 export enum RoleEnum {
   ADMIN = 'admin',
@@ -36,4 +37,7 @@ export class User {
 
   @OneToMany(() => ObtainedBadge, (obtainedBadge) => obtainedBadge.user)
   obtainedBadges: ObtainedBadge[];
+
+  @OneToMany(() => HasPlayed, (hasPlayed) => hasPlayed.user)
+  hasPlayed: HasPlayed[];
 }

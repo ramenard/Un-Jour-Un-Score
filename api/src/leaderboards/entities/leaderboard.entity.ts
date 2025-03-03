@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Game } from '../../games/entities/game.entity';
+import { HasPlayed } from '../../has-played/entities/has-played.entity';
 
 @Entity()
 export class Leaderboard {
@@ -14,4 +21,7 @@ export class Leaderboard {
 
   @Column({ type: 'boolean', default: false })
   isClosed: boolean;
+
+  @OneToMany(() => HasPlayed, (hasPlayed) => hasPlayed.leaderboard)
+  hasPlayed: HasPlayed[];
 }
