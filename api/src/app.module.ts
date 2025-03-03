@@ -11,6 +11,9 @@ import { BadgesModule } from './badges/badges.module';
 import { Badge } from './badges/entities/badge.entity';
 import { ObtainedBadgesModule } from './obtained-badges/obtained-badges.module';
 import { ObtainedBadge } from './obtained-badges/entities/obtained-badge.entity';
+import { LeaderboardsModule } from './leaderboards/leaderboards.module';
+import { LeaderboardsModule } from './leaderboards/leaderboards.module';
+import { Leaderboard } from './leaderboards/entities/leaderboard.entity';
 
 @Module({
   imports: [
@@ -25,7 +28,7 @@ import { ObtainedBadge } from './obtained-badges/entities/obtained-badge.entity'
         password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
         database: configService.get<string>('MYSQL_DATABASE'),
         url: configService.get<string>('MYSQL_DATABASE_URL'),
-        entities: [User, Game, Badge, ObtainedBadge],
+        entities: [User, Game, Badge, ObtainedBadge, Leaderboard],
         autoLoadEntities: true,
         synchronize: true,
       }),
@@ -36,6 +39,7 @@ import { ObtainedBadge } from './obtained-badges/entities/obtained-badge.entity'
     GamesModule,
     BadgesModule,
     ObtainedBadgesModule,
+    LeaderboardsModule,
   ],
   controllers: [],
   providers: [],

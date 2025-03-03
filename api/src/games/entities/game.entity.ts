@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Leaderboard } from '../../leaderboards/entities/leaderboard.entity';
 
 @Entity()
 export class Game {
@@ -10,6 +11,9 @@ export class Game {
 
   @Column()
   description?: string;
+
+  @OneToMany(() => Leaderboard, (leaderboard) => leaderboard.game)
+  leaderboards: Leaderboard[];
 
   @Column({ default: false, type: 'boolean' })
   isActive: boolean;
