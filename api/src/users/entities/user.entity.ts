@@ -8,6 +8,12 @@ export enum RoleEnum {
   USER = 'user',
 }
 
+export interface UserLeaderBoard {
+  username: string;
+  score: number;
+  position: number;
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')

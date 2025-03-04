@@ -11,6 +11,7 @@ import { HasPlayedService } from './has-played.service';
 import { CreateHasPlayedDto } from './dto/create-has-played.dto';
 import { UpdateHasPlayedDto } from './dto/update-has-played.dto';
 import { SecurityGuard } from '../security/security.guard';
+import { HasPlayed } from './entities/has-played.entity';
 
 @UseGuards(SecurityGuard)
 @Controller('has-played')
@@ -18,25 +19,25 @@ export class HasPlayedController {
   constructor(private readonly hasPlayedService: HasPlayedService) {}
 
   @Post()
-  create(@Body() createHasPlayedDto: CreateHasPlayedDto) {
+  public create(@Body() createHasPlayedDto: CreateHasPlayedDto): Promise<void> {
     return this.hasPlayedService.create(createHasPlayedDto);
   }
 
   @Get()
-  findAll() {
+  public findAll(): Promise<HasPlayed[]> {
     return this.hasPlayedService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  public findOne(@Param('id') id: string): Promise<HasPlayed> {
     return this.hasPlayedService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  public update(
     @Param('id') id: string,
     @Body() updateHasPlayedDto: UpdateHasPlayedDto,
-  ) {
+  ): Promise<HasPlayed> {
     return this.hasPlayedService.update(id, updateHasPlayedDto);
   }
 }

@@ -23,7 +23,7 @@ export class HasPlayedService {
     private readonly leaderboardsService: LeaderboardsService,
   ) {}
 
-  public async create(createHasPlayedDto: CreateHasPlayedDto) {
+  public async create(createHasPlayedDto: CreateHasPlayedDto): Promise<void> {
     const user = await this.usersService.findOneById(createHasPlayedDto.userId);
     const leaderboard = await this.leaderboardsService.findOne(
       createHasPlayedDto.leaderboardId,

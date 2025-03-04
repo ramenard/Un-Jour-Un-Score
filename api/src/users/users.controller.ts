@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SecurityGuard } from '../security/security.guard';
 import { RequestWithUserInfo } from '../security/security.controller';
-import { User } from './entities/user.entity';
+import {User, UserLeaderBoard} from './entities/user.entity';
 
 @UseGuards(SecurityGuard)
 @Controller('users')
@@ -31,7 +31,12 @@ export class UsersController {
 
   @Get('profile')
   public getProfile(@Req() req: RequestWithUserInfo): Promise<User> {
-    return this.findOne(req.user.id);
+    return this.usersService.findOneById(req.user.id);
+  }
+
+  @Get(':id/leaderboard')
+  public getCurrentLeaderboardForUser(@Param('id') id: string): Promise<UserLeaderBoard> {
+    return this.usersService.getCurrentLeaderboardForUser(id);
   }
 
   @Patch(':id')
