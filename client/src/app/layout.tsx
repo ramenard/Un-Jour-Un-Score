@@ -1,8 +1,8 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { Inter, Press_Start_2P } from "next/font/google"
-import Navbar from "./components/Navbar"
-import Footer from "./components/Footer"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
 import type React from "react"
 
 const inter = Inter({
@@ -26,12 +26,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html lang="en">
             <body className={`${inter.variable} ${pressStart2P.variable}`}>
-                <Navbar/>
+                <Header/>
                 <main>{children}</main>
                 <Footer/>
-                <div className="nes-theme">
-                    <button type="button" className="nes-btn is-primary">Primary</button>
-                </div>
             </body>
         </html>
     )

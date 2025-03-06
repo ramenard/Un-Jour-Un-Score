@@ -14,6 +14,14 @@
   --color-foreground: var(--foreground);
 }
 
+body {
+  background-image: url("/background.png");
+  background-size: cover;  /* Cover the full viewport */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* No repeating */
+  min-height: 100vh; /* Ensure full height */
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
