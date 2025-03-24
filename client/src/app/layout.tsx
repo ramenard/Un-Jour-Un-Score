@@ -30,7 +30,7 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en">
-			<body className={`${inter.variable} ${pressStart2P.variable}`}>
+			<body suppressHydrationWarning className={`${inter.variable} ${pressStart2P.variable}`}>
 				<Header
 					userStatus={{
 						isAuth: session.isAuth,
