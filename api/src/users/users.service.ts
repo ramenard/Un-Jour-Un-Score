@@ -47,26 +47,26 @@ export class UsersService {
   ): Promise<UserLeaderBoard> {
     return await this.dataSource.query(
       `WITH Ranked AS (SELECT hasPlayed.userId,
-                              user.username,
-                              hasPlayed.score,
-                              ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
-                       FROM has_played as hasPlayed
-                                JOIN \`user\` as user
-       ON user.id = hasPlayed.userId
-           )
-      SELECT username, score, rankScore
-      FROM Ranked
-      WHERE rankScore <= 10
-         OR rankScore = (SELECT rankScore - 1
-                         FROM Ranked
-                         WHERE userId = ?)
-         OR rankScore = (SELECT rankScore + 1
-                         FROM Ranked
-                         WHERE userId = ?)
-         or rankScore = (SELECT rankScore
-                         FROM Ranked
-                         WHERE userId = ?)
-      ORDER BY rankScore`,
+                                user.username,
+                                hasPlayed.score,
+                                ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
+                         FROM has_played as hasPlayed
+                                  JOIN \`user\` as user
+         ON user.id = hasPlayed.userId
+             )
+        SELECT username, score, rankScore
+        FROM Ranked
+        WHERE rankScore <= 10
+           OR rankScore = (SELECT rankScore - 1
+                           FROM Ranked
+                           WHERE userId = ?)
+           OR rankScore = (SELECT rankScore + 1
+                           FROM Ranked
+                           WHERE userId = ?)
+           or rankScore = (SELECT rankScore
+                           FROM Ranked
+                           WHERE userId = ?)
+        ORDER BY rankScore`,
       [userId, userId, userId],
     );
   }
