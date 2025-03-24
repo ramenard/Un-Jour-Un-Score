@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 /*
   ---break---
@@ -16,7 +16,7 @@
 
 body {
   background-image: url("/background.png");
-  background-size: cover;  /* Cover the full viewport */
+  background-size: cover; /* Cover the full viewport */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* No repeating */
   min-height: 100vh; /* Ensure full height */

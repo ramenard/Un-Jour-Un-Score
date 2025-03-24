@@ -42,10 +42,17 @@ export class HasPlayedService {
     await this.hasPlayedRepository.save(hasPlayed);
   }
 
-  public findAll(): Promise<HasPlayed[]> {
-    return this.hasPlayedRepository.find({
-      relations: ['user', 'leaderboard'],
-    });
+  public findAll(userId?: string): Promise<HasPlayed[]> {
+    const queryBuilder = this.hasPlayedRepository
+      .createQueryBuilder()
+      .leftJoinAndSelect('HasPlayed.user', 'user')
+      .leftJoinAndSelect('HasPlayed.leaderboard', 'leaderboard');
+
+    if (userId) {
+      queryBuilder.where('HasPlayed.userId = :userId', { userId });
+    }
+
+    return queryBuilder.getMany();
   }
 
   public async findOne(id: string): Promise<HasPlayed> {

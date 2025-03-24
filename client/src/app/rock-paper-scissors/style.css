@@ -1,0 +1,18 @@
+@keyframes blink-anim {
+    0% { fill: #800; }
+    33% { fill: #f00; }
+    66% { fill: #800; }
+    100% { fill: #800; }
+}
+
+.blink svg path {
+    animation: blink-anim 0.7s infinite;
+}
+
+.blink svg circle {
+    animation: blink-anim 0.7s infinite;
+}
+
+.to-white-png {
+    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(12deg) brightness(108%) contrast(97%);
+}

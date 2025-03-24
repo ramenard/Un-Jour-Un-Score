@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  UseGuards,
+  UseGuards, Query,
 } from '@nestjs/common';
 import { HasPlayedService } from './has-played.service';
 import { CreateHasPlayedDto } from './dto/create-has-played.dto';
@@ -24,8 +24,8 @@ export class HasPlayedController {
   }
 
   @Get()
-  public findAll(): Promise<HasPlayed[]> {
-    return this.hasPlayedService.findAll();
+  public findAll(@Query('userId') userId?: string): Promise<HasPlayed[]> {
+    return this.hasPlayedService.findAll(userId);
   }
 
   @Get(':id')

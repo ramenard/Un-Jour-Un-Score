@@ -1,6 +1,6 @@
 export enum UserRole {
-    user = "user",
-    admin = "admin"
+  user = "user",
+  admin = "admin",
 }
 
 export type User = {
@@ -31,3 +31,4 @@ export type UserSession = {
     username: string;
     role: string;
 }
+
