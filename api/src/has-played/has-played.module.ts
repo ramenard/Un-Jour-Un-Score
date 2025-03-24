@@ -7,12 +7,12 @@ import { UsersModule } from '../users/users.module';
 import { LeaderboardsModule } from '../leaderboards/leaderboards.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([HasPlayed]),
-    UsersModule,
-    LeaderboardsModule,
-  ],
-  controllers: [HasPlayedController],
-  providers: [HasPlayedService],
+	imports: [
+		TypeOrmModule.forFeature([HasPlayed]),
+		UsersModule,
+		LeaderboardsModule,
+	],
+	controllers: [HasPlayedController],
+	providers: [HasPlayedService],
 })
 export class HasPlayedModule {}

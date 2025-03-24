@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Badge } from './entities/badge.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Badge])],
-  controllers: [BadgesController],
-  providers: [BadgesService],
-  exports: [BadgesService],
+	imports: [TypeOrmModule.forFeature([Badge])],
+	controllers: [BadgesController],
+	providers: [BadgesService],
+	exports: [BadgesService],
 })
 export class BadgesModule {}

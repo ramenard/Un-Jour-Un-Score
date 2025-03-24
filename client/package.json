@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write \"{src,app,lib,component}/**/*.ts\" \"{src,app,lib,component}/**/*.tsx\" \\\"test/**/*.ts\\\""
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",

@@ -17,33 +17,40 @@ import { HasPlayedModule } from './has-played/has-played.module';
 import { HasPlayed } from './has-played/entities/has-played.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get<string>('MYSQLHOST'),
-        port: +configService.get<number>('MYSQLPORT')!,
-        username: configService.get<string>('MYSQLUSER'),
-        password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
-        database: configService.get<string>('MYSQL_DATABASE'),
-        url: configService.get<string>('MYSQL_DATABASE_URL'),
-        entities: [User, Game, Badge, ObtainedBadge, Leaderboard, HasPlayed],
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
-    UsersModule,
-    SecurityModule,
-    GamesModule,
-    BadgesModule,
-    ObtainedBadgesModule,
-    LeaderboardsModule,
-    HasPlayedModule,
-  ],
-  controllers: [],
-  providers: [],
+	imports: [
+		ConfigModule.forRoot({ isGlobal: true }),
+		TypeOrmModule.forRootAsync({
+			imports: [ConfigModule],
+			useFactory: (configService: ConfigService) => ({
+				type: 'mysql',
+				host: configService.get<string>('MYSQLHOST'),
+				port: +configService.get<number>('MYSQLPORT')!,
+				username: configService.get<string>('MYSQLUSER'),
+				password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
+				database: configService.get<string>('MYSQL_DATABASE'),
+				url: configService.get<string>('MYSQL_DATABASE_URL'),
+				entities: [
+					User,
+					Game,
+					Badge,
+					ObtainedBadge,
+					Leaderboard,
+					HasPlayed,
+				],
+				autoLoadEntities: true,
+				synchronize: true,
+			}),
+			inject: [ConfigService],
+		}),
+		UsersModule,
+		SecurityModule,
+		GamesModule,
+		BadgesModule,
+		ObtainedBadgesModule,
+		LeaderboardsModule,
+		HasPlayedModule,
+	],
+	controllers: [],
+	providers: [],
 })
 export class AppModule {}

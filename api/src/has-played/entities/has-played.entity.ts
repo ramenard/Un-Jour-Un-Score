@@ -4,21 +4,21 @@ import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class HasPlayed {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-  @Column({ default: 0 })
-  position: number;
+	@Column({ default: 0 })
+	position: number;
 
-  @Column({ default: 0 })
-  score: number;
+	@Column({ default: 0 })
+	score: number;
 
-  @Column({ default: 0 })
-  tries: number;
+	@Column({ default: 0 })
+	tries: number;
 
-  @ManyToOne(() => User, (user) => user.hasPlayed)
-  user: User;
+	@ManyToOne(() => User, (user) => user.hasPlayed)
+	user: User;
 
-  @ManyToOne(() => Leaderboard, (leaderboard) => leaderboard.hasPlayed)
-  leaderboard: Leaderboard;
+	@ManyToOne(() => Leaderboard, (leaderboard) => leaderboard.hasPlayed)
+	leaderboard: Leaderboard;
 }

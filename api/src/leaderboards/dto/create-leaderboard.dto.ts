@@ -1,11 +1,11 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateLeaderboardDto {
-  @IsUUID()
-  @IsNotEmpty()
-  gameId: string;
+	@IsUUID()
+	@IsNotEmpty()
+	gameId: string;
 
-  @IsOptional()
-  @IsBoolean()
-  isClosed: boolean;
+	@IsOptional()
+	@IsBoolean()
+	isClosed: boolean;
 }

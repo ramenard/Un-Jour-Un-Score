@@ -3,18 +3,18 @@ import { ObtainedBadge } from '../../obtained-badges/entities/obtained-badge.ent
 
 @Entity()
 export class Badge {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
-  @Column()
-  name: string;
+	@Column()
+	name: string;
 
-  @Column()
-  description?: string;
+	@Column()
+	description?: string;
 
-  @Column()
-  imagePath?: string;
+	@Column()
+	imagePath?: string;
 
-  @OneToMany(() => ObtainedBadge, (obtainedBadge) => obtainedBadge.badge)
-  obtainedBadges: ObtainedBadge[];
+	@OneToMany(() => ObtainedBadge, (obtainedBadge) => obtainedBadge.badge)
+	obtainedBadges: ObtainedBadge[];
 }

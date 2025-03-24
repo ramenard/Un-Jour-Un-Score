@@ -6,9 +6,9 @@ import { Leaderboard } from './entities/leaderboard.entity';
 import { GamesModule } from '../games/games.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Leaderboard]), GamesModule],
-  controllers: [LeaderboardsController],
-  providers: [LeaderboardsService],
-  exports: [LeaderboardsService],
+	imports: [TypeOrmModule.forFeature([Leaderboard]), GamesModule],
+	controllers: [LeaderboardsController],
+	providers: [LeaderboardsService],
+	exports: [LeaderboardsService],
 })
 export class LeaderboardsModule {}

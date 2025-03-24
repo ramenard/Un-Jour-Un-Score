@@ -7,12 +7,12 @@ import { UsersModule } from '../users/users.module';
 import { BadgesModule } from '../badges/badges.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ObtainedBadge]),
-    UsersModule,
-    BadgesModule,
-  ],
-  controllers: [ObtainedBadgesController],
-  providers: [ObtainedBadgesService],
+	imports: [
+		TypeOrmModule.forFeature([ObtainedBadge]),
+		UsersModule,
+		BadgesModule,
+	],
+	controllers: [ObtainedBadgesController],
+	providers: [ObtainedBadgesService],
 })
 export class ObtainedBadgesModule {}

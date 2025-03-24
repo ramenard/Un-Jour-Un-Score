@@ -1,13 +1,13 @@
-import Hero from "../components/Hero"
-import Features from "../components/Features"
-import CTA from "@/components/CTA";
+import Hero from '../components/Hero';
+import Features from '../components/Features';
+import CTA from '@/components/CTA';
 
 export default function Home() {
-  return (
-      <div className="nes-theme min-h-screen">
-          <Hero/>
-          <Features/>
-          <CTA />
-      </div>
-  )
+	return (
+		<div className="nes-theme min-h-screen">
+			<Hero />
+			<Features />
+			<CTA />
+		</div>
+	);
 }

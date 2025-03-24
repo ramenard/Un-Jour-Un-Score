@@ -3,18 +3,18 @@ import { BadgesController } from './badges.controller';
 import { BadgesService } from './badges.service';
 
 describe('BadgesController', () => {
-  let controller: BadgesController;
+	let controller: BadgesController;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [BadgesController],
-      providers: [BadgesService],
-    }).compile();
+	beforeEach(async () => {
+		const module: TestingModule = await Test.createTestingModule({
+			controllers: [BadgesController],
+			providers: [BadgesService],
+		}).compile();
 
-    controller = module.get<BadgesController>(BadgesController);
-  });
+		controller = module.get<BadgesController>(BadgesController);
+	});
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+	it('should be defined', () => {
+		expect(controller).toBeDefined();
+	});
 });

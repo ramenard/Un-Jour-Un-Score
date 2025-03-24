@@ -7,38 +7,41 @@ import { Game } from './entities/game.entity';
 
 @Injectable()
 export class GamesService {
-  public constructor(
-    @InjectRepository(Game)
-    private readonly gameRepository: Repository<Game>,
-  ) {}
+	public constructor(
+		@InjectRepository(Game)
+		private readonly gameRepository: Repository<Game>,
+	) {}
 
-  public async create(createGameDto: CreateGameDto): Promise<void> {
-    await this.gameRepository.save(createGameDto);
-  }
+	public async create(createGameDto: CreateGameDto): Promise<void> {
+		await this.gameRepository.save(createGameDto);
+	}
 
-  public findAll(): Promise<Game[]> {
-    return this.gameRepository.find({ relations: ['leaderboards'] });
-  }
+	public findAll(): Promise<Game[]> {
+		return this.gameRepository.find({ relations: ['leaderboards'] });
+	}
 
-  public async findOne(id: string): Promise<Game> {
-    const game = await this.gameRepository.findOne({
-      where: { id: id },
-      relations: ['leaderboards'],
-    });
-    if (!game) {
-      throw new NotFoundException();
-    }
+	public async findOne(id: string): Promise<Game> {
+		const game = await this.gameRepository.findOne({
+			where: { id: id },
+			relations: ['leaderboards'],
+		});
+		if (!game) {
+			throw new NotFoundException();
+		}
 
-    return game;
-  }
+		return game;
+	}
 
-  public async update(id: string, updateGameDto: UpdateGameDto): Promise<Game> {
-    await this.gameRepository.update(id, updateGameDto);
+	public async update(
+		id: string,
+		updateGameDto: UpdateGameDto,
+	): Promise<Game> {
+		await this.gameRepository.update(id, updateGameDto);
 
-    return this.findOne(id);
-  }
+		return this.findOne(id);
+	}
 
-  public async remove(id: string): Promise<void> {
-    await this.gameRepository.delete(id);
-  }
+	public async remove(id: string): Promise<void> {
+		await this.gameRepository.delete(id);
+	}
 }

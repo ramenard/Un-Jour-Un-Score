@@ -7,46 +7,46 @@ import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectDataSource() private readonly dataSource: DataSource,
-  ) {}
+	constructor(
+		@InjectRepository(User)
+		private readonly userRepository: Repository<User>,
+		@InjectDataSource() private readonly dataSource: DataSource,
+	) {}
 
-  public create(registerDto: RegisterDto): Promise<User> {
-    return this.userRepository.save(registerDto);
-  }
+	public create(registerDto: RegisterDto): Promise<User> {
+		return this.userRepository.save(registerDto);
+	}
 
-  public findAll(): Promise<User[]> {
-    return this.userRepository.find({ relations: ['obtainedBadges'] });
-  }
+	public findAll(): Promise<User[]> {
+		return this.userRepository.find({ relations: ['obtainedBadges'] });
+	}
 
-  public async findOneByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { email },
-      select: ['id', 'username', 'email', 'password', 'role'],
-    });
-    if (!user) {
-      throw new NotFoundException();
-    }
+	public async findOneByEmail(email: string): Promise<User> {
+		const user = await this.userRepository.findOne({
+			where: { email },
+			select: ['id', 'username', 'email', 'password', 'role'],
+		});
+		if (!user) {
+			throw new NotFoundException();
+		}
 
-    return user;
-  }
+		return user;
+	}
 
-  public async findOneById(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id: id } });
-    if (!user) {
-      throw new NotFoundException();
-    }
+	public async findOneById(id: string): Promise<User> {
+		const user = await this.userRepository.findOne({ where: { id: id } });
+		if (!user) {
+			throw new NotFoundException();
+		}
 
-    return user;
-  }
+		return user;
+	}
 
-  public async getCurrentLeaderboardForUser(
-    userId: string,
-  ): Promise<UserLeaderBoard> {
-    return await this.dataSource.query(
-      `WITH Ranked AS (SELECT hasPlayed.userId,
+	public async getCurrentLeaderboardForUser(
+		userId: string,
+	): Promise<UserLeaderBoard> {
+		return await this.dataSource.query(
+			`WITH Ranked AS (SELECT hasPlayed.userId,
                                 user.username,
                                 hasPlayed.score,
                                 ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
@@ -67,12 +67,15 @@ export class UsersService {
                            FROM Ranked
                            WHERE userId = ?)
         ORDER BY rankScore`,
-      [userId, userId, userId],
-    );
-  }
+			[userId, userId, userId],
+		);
+	}
 
-  public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.userRepository.update(id, updateUserDto);
-    return this.findOneById(id);
-  }
+	public async update(
+		id: string,
+		updateUserDto: UpdateUserDto,
+	): Promise<User> {
+		await this.userRepository.update(id, updateUserDto);
+		return this.findOneById(id);
+	}
 }

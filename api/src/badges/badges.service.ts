@@ -7,38 +7,38 @@ import { Badge } from './entities/badge.entity';
 
 @Injectable()
 export class BadgesService {
-  constructor(
-    @InjectRepository(Badge)
-    private readonly badgeRepository: Repository<Badge>,
-  ) {}
+	constructor(
+		@InjectRepository(Badge)
+		private readonly badgeRepository: Repository<Badge>,
+	) {}
 
-  public async create(createBadgeDto: CreateBadgeDto): Promise<void> {
-    await this.badgeRepository.save(createBadgeDto);
-  }
+	public async create(createBadgeDto: CreateBadgeDto): Promise<void> {
+		await this.badgeRepository.save(createBadgeDto);
+	}
 
-  public findAll(): Promise<Badge[]> {
-    return this.badgeRepository.find();
-  }
+	public findAll(): Promise<Badge[]> {
+		return this.badgeRepository.find();
+	}
 
-  public async findOne(id: string): Promise<Badge> {
-    const badge = await this.badgeRepository.findOne({ where: { id: id } });
-    if (!badge) {
-      throw new NotFoundException();
-    }
+	public async findOne(id: string): Promise<Badge> {
+		const badge = await this.badgeRepository.findOne({ where: { id: id } });
+		if (!badge) {
+			throw new NotFoundException();
+		}
 
-    return badge;
-  }
+		return badge;
+	}
 
-  public async update(
-    id: string,
-    updateBadgeDto: UpdateBadgeDto,
-  ): Promise<Badge> {
-    await this.badgeRepository.update(id, updateBadgeDto);
+	public async update(
+		id: string,
+		updateBadgeDto: UpdateBadgeDto,
+	): Promise<Badge> {
+		await this.badgeRepository.update(id, updateBadgeDto);
 
-    return this.findOne(id);
-  }
+		return this.findOne(id);
+	}
 
-  public async remove(id: string): Promise<void> {
-    await this.badgeRepository.delete(id);
-  }
+	public async remove(id: string): Promise<void> {
+		await this.badgeRepository.delete(id);
+	}
 }
