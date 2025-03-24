@@ -17,7 +17,7 @@ export const LoginFormSchema = z.object({
 });
 
 export const RegisterFormSchema = z.object({
-	name: z
+	username: z
 		.string()
 		.min(2, { message: "Le nom doit être d'au moins 2 caractères." })
 		.trim(),
@@ -36,13 +36,16 @@ export const RegisterFormSchema = z.object({
 		.trim(),
 });
 
-export type FormState =
-	| {
-			errors?: {
-				name?: string[];
-				email?: string[];
-				password?: string[];
-			};
-			message?: string;
-	  }
-	| undefined;
+export type RegisterFormData = z.infer<typeof RegisterFormSchema>;
+
+export type FormErrors<T> = {
+	[K in keyof T]?: string[];
+};
+
+export type FormState<T> = {
+	errors?: FormErrors<T>;
+	success?: boolean;
+	message?: string;
+};
+
+export type RegisterFormState = FormState<RegisterFormData>;

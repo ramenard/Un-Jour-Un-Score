@@ -2,14 +2,15 @@
 
 import {
 	LoginFormSchema,
-	FormState,
 	RegisterFormSchema,
+	RegisterFormState,
 } from '@/lib/definitions';
+
 import { CreateUserDto, LoginUserDto } from '@/types/user';
 import { redirect } from 'next/navigation';
 import { createSession, deleteSession } from '@/lib/session';
 
-export async function login(state: FormState, formData: FormData) {
+export async function login(prevState: RegisterFormState, formData: FormData) {
 	// Validate form fields
 	const validatedFields = LoginFormSchema.safeParse({
 		email: formData.get('email'),
@@ -31,31 +32,38 @@ export async function login(state: FormState, formData: FormData) {
 	redirect('/');
 }
 
-export async function register(state: FormState, formData: FormData) {
+export async function register(
+	prevState: RegisterFormState,
+	formData: FormData,
+): Promise<RegisterFormState> {
 	const validatedFields = RegisterFormSchema.safeParse({
-		name: formData.get('name'),
+		username: formData.get('username'),
 		email: formData.get('email'),
 		password: formData.get('password'),
 	});
 
 	if (!validatedFields.success) {
 		return {
+			success: false,
 			errors: validatedFields.error.flatten().fieldErrors,
 		};
 	}
 
-	const { name, email, password } = validatedFields.data;
+	const { username, email, password } = validatedFields.data;
+
 	const createUserDto: CreateUserDto = {
-		username: name,
+		username: username,
 		email: email,
 		password: password,
 	};
+
 	const token = await createUser(createUserDto);
-	await createSession(token);
-	redirect('/');
+	await createSession(token.access_token);
+
+	return { success: true };
 }
 
-export async function logout() {
+export async function logoutServer() {
 	await deleteSession();
 	redirect('/');
 }

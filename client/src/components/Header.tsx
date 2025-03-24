@@ -3,15 +3,20 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import { logout } from '@/app/actions/auth';
 import React from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
-interface UserStatus {
-	isAuth: boolean;
-	userRole: string;
-}
+export default function Header() {
+	const { isAuth, userRole, refreshAuth } = useAuth();
+	const router = useRouter();
 
-const Header: React.FC<UserStatus> = (UserStatus) => {
+	const handleLogout = async () => {
+		await fetch('/api/logout', { method: 'POST' });
+		await refreshAuth();
+		router.push('/');
+	};
+
 	return (
 		<header className="shadow">
 			<nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -22,7 +27,7 @@ const Header: React.FC<UserStatus> = (UserStatus) => {
 					/>
 				</Link>
 				<div className="nes-theme">
-					{!UserStatus.isAuth && (
+					{!isAuth ? (
 						<>
 							<Button asChild className="mr-2">
 								<Link href="/login">Connexion</Link>
@@ -31,23 +36,25 @@ const Header: React.FC<UserStatus> = (UserStatus) => {
 								<Link href="/register">Inscription</Link>
 							</Button>
 						</>
-					)}
-					{UserStatus.isAuth && (
+					) : (
 						<>
-							{UserStatus.userRole == 'Admin' && (
+							{userRole === 'Admin' && (
 								<Button asChild className="mr-2">
 									<Link href="/dashboard">Dashboard</Link>
 								</Button>
 							)}
 							<Button asChild className="mr-2">
-								<Link href="/test">Profil</Link>
+								<Link href="/">Profil</Link>
 							</Button>
 							<Button
 								asChild
 								variant="destructive"
 								className="mr-2"
 							>
-								<button onClick={() => logout()}>
+								<button
+									onClick={handleLogout}
+									className="nes-btn is-error"
+								>
 									Se déconnecter
 								</button>
 							</Button>
@@ -57,7 +64,4 @@ const Header: React.FC<UserStatus> = (UserStatus) => {
 			</nav>
 		</header>
 	);
-};
-
-export default Header;
-
+}

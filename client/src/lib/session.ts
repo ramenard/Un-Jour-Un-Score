@@ -1,4 +1,5 @@
 import 'server-only';
+
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
@@ -49,6 +50,11 @@ export async function deleteSession() {
 }
 
 export async function decrypt(session: string | undefined = '') {
+	if (!session) {
+		console.log('No session cookie found');
+		return null;
+	}
+
 	try {
 		const { payload } = await jwtVerify(session, encodedKey, {
 			algorithms: ['HS256'],
@@ -56,7 +62,6 @@ export async function decrypt(session: string | undefined = '') {
 		return payload;
 	} catch (error) {
 		console.log('Failed to verify session :' + error);
+		return null;
 	}
 }
-
-//await decrypt(token.access_token
