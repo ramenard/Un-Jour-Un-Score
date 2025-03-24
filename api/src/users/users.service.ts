@@ -1,9 +1,9 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {RegisterDto} from '../security/dto/register.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {InjectDataSource, InjectRepository} from '@nestjs/typeorm';
-import {User, UserLeaderBoard} from './entities/user.entity';
-import {DataSource, Repository} from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RegisterDto } from '../security/dto/register.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { User, UserLeaderBoard } from './entities/user.entity';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -42,7 +42,9 @@ export class UsersService {
     return user;
   }
 
-  public async getCurrentLeaderboardForUser(userId: string): Promise<UserLeaderBoard> {
+  public async getCurrentLeaderboardForUser(
+    userId: string,
+  ): Promise<UserLeaderBoard> {
     return await this.dataSource.query(
       `WITH Ranked AS (SELECT hasPlayed.userId,
                               user.username,
@@ -65,7 +67,8 @@ export class UsersService {
                          FROM Ranked
                          WHERE userId = ?)
       ORDER BY rankScore`,
-      [userId, userId, userId])
+      [userId, userId, userId],
+    );
   }
 
   public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {

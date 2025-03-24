@@ -14,3 +14,20 @@ export type User = {
     freeCoins: number;
     premiumCoins: number;
 }
+
+export type CreateUserDto = {
+    username: string;
+    email: string;
+    password: string;
+}
+
+export type LoginUserDto = {
+    email: string;
+    password: string;
+}
+
+export type UserSession = {
+    id: string;
+    username: string;
+    role: string;
+}

@@ -4,6 +4,7 @@ import { Inter, Press_Start_2P } from "next/font/google"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
 import type React from "react"
+import {getSession} from "@/lib/session";
 
 const inter = Inter({
     subsets: ['latin'],
@@ -22,11 +23,14 @@ export const metadata: Metadata = {
     description: "Challenge yourself daily with our unique scoring game!",
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({children}: Readonly<{ children: React.ReactNode }>) {
+
+    const session = await getSession()
+
     return (
         <html lang="en">
             <body className={`${inter.variable} ${pressStart2P.variable}`}>
-                <Header/>
+                <Header userStatus={{isAuth: session.isAuth, userRole : session.user.role}}/>
                 <main>{children}</main>
                 <Footer/>
             </body>

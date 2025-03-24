@@ -20,10 +20,13 @@ export class SecurityService {
       ...registerDto,
       password: hash,
     });
-    const payload = { id: user.id, username: user.username };
+    const payload = { id: user.id, username: user.username, role: user.role };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        algorithm: 'HS256',
+        secret: 'jwt',
+      }),
     };
   }
 
@@ -35,10 +38,13 @@ export class SecurityService {
     if (!user || !(await bcryptCompare(password, user.password))) {
       throw new UnauthorizedException();
     }
-    const payload = { id: user.id, username: user.username };
+    const payload = { id: user.id, username: user.username, role: user.role };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        algorithm: 'HS256',
+        secret: 'jwt',
+      }),
     };
   }
 }

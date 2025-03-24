@@ -12,7 +12,6 @@ import { Badge } from './badges/entities/badge.entity';
 import { ObtainedBadgesModule } from './obtained-badges/obtained-badges.module';
 import { ObtainedBadge } from './obtained-badges/entities/obtained-badge.entity';
 import { LeaderboardsModule } from './leaderboards/leaderboards.module';
-import { LeaderboardsModule } from './leaderboards/leaderboards.module';
 import { Leaderboard } from './leaderboards/entities/leaderboard.entity';
 import { HasPlayedModule } from './has-played/has-played.module';
 import { HasPlayed } from './has-played/entities/has-played.entity';
