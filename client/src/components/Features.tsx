@@ -22,7 +22,7 @@ const features = [
 
 export default function Features() {
 	return (
-		<section className="py-20">
+		<section className="py-8">
 			<h2 className="nes-text is-disabled text-3xl font-bold text-center mb-10">
 				Game Features
 			</h2>

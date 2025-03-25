@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RegisterDto } from '../security/dto/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User, UserLeaderBoard } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 
@@ -10,7 +10,7 @@ export class UsersService {
 	constructor(
 		@InjectRepository(User)
 		private readonly userRepository: Repository<User>,
-		@InjectDataSource() private readonly dataSource: DataSource,
+		private readonly dataSource: DataSource,
 	) {}
 
 	public create(registerDto: RegisterDto): Promise<User> {
@@ -53,6 +53,8 @@ export class UsersService {
                              FROM has_played as hasPlayed
                                       JOIN \`user\` as user
              ON user.id = hasPlayed.userId
+                 JOIN \`leaderboard\` as leaderboard ON leaderboard.id = hasPlayed.leaderboardId
+             WHERE leaderboard.isClosed = FALSE
                  )
             SELECT username, score, rankScore
             FROM Ranked

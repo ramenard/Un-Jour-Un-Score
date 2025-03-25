@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Leaderboard } from './entities/leaderboard.entity';
 import { GamesService } from '../games/games.service';
@@ -19,7 +19,7 @@ export class LeaderboardsService {
 		private readonly leaderboardRepository: Repository<Leaderboard>,
 		@Inject(forwardRef(() => GamesService))
 		private readonly gamesService: GamesService,
-		@InjectDataSource() private readonly dataSource: DataSource,
+		private readonly dataSource: DataSource,
 	) {}
 
 	public async create(
@@ -65,7 +65,7 @@ export class LeaderboardsService {
 	}
 
 	public async getUserLeaderboard(): Promise<UserLeaderBoard[]> {
-		return await this.dataSource.query(
+		return this.dataSource.query(
 			`WITH Ranked AS (SELECT hasPlayed.userId,
                                 user.username,
                                 hasPlayed.score,
@@ -73,6 +73,8 @@ export class LeaderboardsService {
                          FROM has_played as hasPlayed
                                   JOIN \`user\` as user
          ON user.id = hasPlayed.userId
+             JOIN \`leaderboard\` as leaderboard ON leaderboard.id = hasPlayed.leaderboardId
+             WHERE leaderboard.isClosed = FALSE
              )
         SELECT username, score, rankScore
         FROM Ranked

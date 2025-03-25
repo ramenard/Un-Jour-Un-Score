@@ -3,13 +3,19 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 export default function Header() {
 	const { isAuth, userRole, refreshAuth } = useAuth();
+	const { user } = useUser();
 	const router = useRouter();
+
+	useEffect(() => {
+		console.log('premium', user?.premiumCoins);
+	});
 
 	const handleLogout = async () => {
 		await fetch('/api/logout', { method: 'POST' });
@@ -43,21 +49,30 @@ export default function Header() {
 									<Link href="/dashboard">Dashboard</Link>
 								</Button>
 							)}
-							<Button asChild className="mr-2">
-								<Link href="/">Profil</Link>
-							</Button>
-							<Button
-								asChild
-								variant="destructive"
-								className="mr-2"
-							>
-								<button
-									onClick={handleLogout}
-									className="nes-btn is-error"
+							<div className="flex flex-row items-center">
+								{user &&
+									[...Array(user?.gameCoins)].map((_, i) => (
+										<i
+											key={i}
+											className="nes-icon coin is-medium"
+										/>
+									))}
+								<Button asChild className="mr-2">
+									<Link href="/">Profil</Link>
+								</Button>
+								<Button
+									asChild
+									variant="destructive"
+									className="mr-2"
 								>
-									Se déconnecter
-								</button>
-							</Button>
+									<button
+										onClick={handleLogout}
+										className="nes-btn is-error"
+									>
+										Se déconnecter
+									</button>
+								</Button>
+							</div>
 						</>
 					)}
 				</div>

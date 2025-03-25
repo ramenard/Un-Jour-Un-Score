@@ -1,14 +1,12 @@
 export enum UserRole {
-	user = 'user',
-	admin = 'admin',
+	USER = 'user',
+	ADMIN = 'admin',
 }
 
 export type User = {
-	user_id: number;
+	id: number;
 	userName: string;
 	email: string;
-	password: string;
-	picture: string;
 	role: UserRole;
 	gameCoins: number;
 	freeCoins: number;

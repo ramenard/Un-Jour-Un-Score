@@ -1,11 +1,4 @@
-import {
-	Body,
-	Controller,
-	Post,
-	HttpCode,
-	HttpStatus,
-	Req,
-} from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { SecurityService } from './security.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { RegisterDto } from './dto/register.dto';
