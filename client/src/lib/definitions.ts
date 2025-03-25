@@ -16,6 +16,8 @@ export const LoginFormSchema = z.object({
 		.trim(),
 });
 
+export type LoginFormData = z.infer<typeof LoginFormSchema>;
+
 export const RegisterFormSchema = z.object({
 	username: z
 		.string()
@@ -48,4 +50,5 @@ export type FormState<T> = {
 	message?: string;
 };
 
+export type LoginFormState = FormState<LoginFormData>;
 export type RegisterFormState = FormState<RegisterFormData>;

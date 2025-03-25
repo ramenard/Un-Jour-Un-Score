@@ -7,7 +7,6 @@ import { UserSession } from '@/types/user';
 import { isString } from '@/utils/assert';
 
 const secretKey = process.env.SESSION_SECRET ?? 'jwt';
-console.log(secretKey)
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function createSession(token: string) {
@@ -24,7 +23,6 @@ export async function createSession(token: string) {
 export const getSession = cache(
 	async (): Promise<{ isAuth: boolean; user: UserSession }> => {
 		const cookie = (await cookies()).get('session')?.value;
-
 		const session = await decrypt(cookie);
 
 		if (

@@ -2,18 +2,46 @@
 
 import { login } from '@/app/actions/auth';
 import { useActionState, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import type { LoginFormState } from '@/lib/definitions';
 
 export default function LoginForm() {
-	const [state, action, pending] = useActionState(login, undefined);
+	const { refreshAuth } = useAuth();
+	const router = useRouter();
+
 	const [password, setPassword] = useState<string>('');
 	const [email, setEmail] = useState<string>('');
+
+	const initialState: LoginFormState = {
+		errors: {},
+		success: false,
+		message: '',
+	};
+
+	const [state, action, pending] = useActionState(
+		async (
+			prevState: LoginFormState,
+			formData: FormData,
+		): Promise<LoginFormState> => {
+			const result = await login(prevState, formData);
+
+			if (result?.success) {
+				await refreshAuth();
+				router.push('/');
+			}
+
+			return result || initialState;
+		},
+		initialState,
+	);
 
 	return (
 		<form action={action} className="nes-theme nes-text is-disabled">
 			<div className="nes-field my-3">
 				<label htmlFor="email">Email</label>
 				<input
-					type="text"
+					type="email"
 					id="email"
 					name="email"
 					placeholder="Email"
