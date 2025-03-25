@@ -56,13 +56,7 @@ export class UsersService {
                  )
             SELECT username, score, rankScore
             FROM Ranked
-            WHERE rankScore = (SELECT rankScore - 2
-                               FROM Ranked
-                               WHERE userId = ?)
-               OR rankScore = (SELECT rankScore - 1
-                               FROM Ranked
-                               WHERE userId = ?)
-               or rankScore = (SELECT rankScore
+            WHERE rankScore = (SELECT rankScore - 1
                                FROM Ranked
                                WHERE userId = ?)
                OR rankScore = (SELECT rankScore + 1
@@ -71,8 +65,11 @@ export class UsersService {
                OR rankScore = (SELECT rankScore + 2
                                FROM Ranked
                                WHERE userId = ?)
+               OR rankScore = (SELECT rankScore
+                               FROM Ranked
+                               WHERE userId = ?)
             ORDER BY rankScore`,
-			[userId, userId, userId, userId, userId],
+			[userId, userId, userId, userId],
 		);
 	}
 
@@ -93,5 +90,32 @@ export class UsersService {
 			[userId],
 		);
 		return !data;
+	}
+
+	public async updateTries(id: string): Promise<void> {
+		await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoin('user.hasPlayed', 'has_played')
+			.update('has_played')
+			.set({
+				tries: () => 'tries + 1',
+			})
+			.where('user.id = :id', { id })
+			.execute();
+	}
+
+	public async updateScore(
+		id: string,
+		score: { score: number },
+	): Promise<void> {
+		await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoin('user.hasPlayed', 'has_Played')
+			.update('has_played')
+			.set({
+				score: score.score,
+			})
+			.where('user.id = :id', { id })
+			.execute();
 	}
 }

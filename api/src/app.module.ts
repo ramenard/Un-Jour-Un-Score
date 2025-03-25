@@ -15,6 +15,7 @@ import { LeaderboardsModule } from './leaderboards/leaderboards.module';
 import { Leaderboard } from './leaderboards/entities/leaderboard.entity';
 import { HasPlayedModule } from './has-played/has-played.module';
 import { HasPlayed } from './has-played/entities/has-played.entity';
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
 	imports: [
@@ -49,6 +50,7 @@ import { HasPlayed } from './has-played/entities/has-played.entity';
 		ObtainedBadgesModule,
 		LeaderboardsModule,
 		HasPlayedModule,
+		ScheduleModule.forRoot(),
 	],
 	controllers: [],
 	providers: [],

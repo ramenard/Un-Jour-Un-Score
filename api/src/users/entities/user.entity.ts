@@ -14,12 +14,6 @@ export interface UserLeaderBoard {
 	position: number;
 }
 
-export interface UserCoins {
-	gameCoins: number;
-	premiumCoins: number;
-	freeCoins: number;
-}
-
 @Entity()
 export class User {
 	@PrimaryGeneratedColumn('uuid')
@@ -38,7 +32,7 @@ export class User {
 	@Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
 	role: RoleEnum;
 
-	@Column({ default: 0 })
+	@Column({ default: 3 })
 	gameCoins: number;
 
 	@Column({ default: 0 })
