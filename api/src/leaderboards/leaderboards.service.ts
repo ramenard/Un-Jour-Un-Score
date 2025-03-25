@@ -49,6 +49,19 @@ export class LeaderboardsService {
 		return leaderboard;
 	}
 
+	public async getCurrent(): Promise<Leaderboard> {
+		const leaderboard = await this.leaderboardRepository.findOne({
+			where: { isClosed: false },
+			relations: ['game'],
+		});
+
+		if (!leaderboard) {
+			throw new NotFoundException();
+		}
+
+		return leaderboard;
+	}
+
 	public async update(
 		id: string,
 		updateLeaderboardDto: UpdateLeaderboardDto,

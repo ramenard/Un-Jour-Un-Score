@@ -27,8 +27,11 @@ export class HasPlayedController {
 	}
 
 	@Get()
-	public findAll(@Query('userId') userId?: string): Promise<HasPlayed[]> {
-		return this.hasPlayedService.findAll(userId);
+	public findAll(
+		@Query('userId') userId?: string,
+		@Query('leaderboardId') leaderboardId?: string,
+	): Promise<HasPlayed[]> {
+		return this.hasPlayedService.findAll(userId, leaderboardId);
 	}
 
 	@Get(':id')

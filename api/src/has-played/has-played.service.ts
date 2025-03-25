@@ -44,7 +44,10 @@ export class HasPlayedService {
 		await this.hasPlayedRepository.save(hasPlayed);
 	}
 
-	public findAll(userId?: string): Promise<HasPlayed[]> {
+	public findAll(
+		userId?: string,
+		leaderboardId?: string,
+	): Promise<HasPlayed[]> {
 		const queryBuilder = this.hasPlayedRepository
 			.createQueryBuilder()
 			.leftJoinAndSelect('HasPlayed.user', 'user')
@@ -52,6 +55,12 @@ export class HasPlayedService {
 
 		if (userId) {
 			queryBuilder.where('HasPlayed.userId = :userId', { userId });
+		}
+
+		if (leaderboardId) {
+			queryBuilder.where('HasPlayed.leaderboardId = :leaderboardId', {
+				leaderboardId,
+			});
 		}
 
 		return queryBuilder.getMany();

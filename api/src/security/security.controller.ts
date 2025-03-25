@@ -10,7 +10,7 @@ import { SecurityService } from './security.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { RegisterDto } from './dto/register.dto';
 
-export interface RequestWithUserInfo extends Req {
+export interface RequestWithUserInfo extends Request {
 	user: {
 		id: string;
 		username: string;

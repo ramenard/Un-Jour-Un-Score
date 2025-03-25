@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 		const res = await fetch('/api/session', { cache: 'no-store' });
 		const session = await res.json();
 
+        console.log(session)
+
 		setIsAuth(session.isAuth);
 		setUserId(session.user?.id || '');
 		setUserRole(session.user?.role || '');

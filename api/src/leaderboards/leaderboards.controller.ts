@@ -35,6 +35,11 @@ export class LeaderboardsController {
 		return this.leaderboardsService.findOne(id);
 	}
 
+	@Get('current')
+	public findCurrent(): Promise<Leaderboard> {
+		return this.leaderboardsService.getCurrent();
+	}
+
 	@Patch(':id')
 	public update(
 		@Param('id') id: string,
