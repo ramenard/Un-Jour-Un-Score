@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SecurityGuard } from '../security/security.guard';
 import { RequestWithUserInfo } from '../security/security.controller';
-import { User, UserLeaderBoard } from './entities/user.entity';
+import { User, UserCoins, UserLeaderBoard } from './entities/user.entity';
 
 @UseGuards(SecurityGuard)
 @Controller('users')
@@ -37,7 +37,7 @@ export class UsersController {
 	@Get(':id/leaderboard')
 	public getCurrentLeaderboardForUser(
 		@Param('id') id: string,
-	): Promise<UserLeaderBoard> {
+	): Promise<UserLeaderBoard[]> {
 		return this.usersService.getCurrentLeaderboardForUser(id);
 	}
 
@@ -47,5 +47,10 @@ export class UsersController {
 		@Body() updateUserDto: UpdateUserDto,
 	): Promise<User> {
 		return this.usersService.update(id, updateUserDto);
+	}
+
+	@Get(':id/isAble')
+	public getUserAbility(@Param('id') id: string): Promise<boolean> {
+		return this.usersService.getUserCanPlay(id);
 	}
 }

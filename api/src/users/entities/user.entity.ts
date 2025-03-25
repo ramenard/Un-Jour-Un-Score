@@ -14,6 +14,12 @@ export interface UserLeaderBoard {
 	position: number;
 }
 
+export interface UserCoins {
+	gameCoins: number;
+	premiumCoins: number;
+	freeCoins: number;
+}
+
 @Entity()
 export class User {
 	@PrimaryGeneratedColumn('uuid')

@@ -8,6 +8,12 @@ import {
 import { Game } from '../../games/entities/game.entity';
 import { HasPlayed } from '../../has-played/entities/has-played.entity';
 
+export interface UserLeaderBoard {
+	username: string;
+	score: number;
+	position: number;
+}
+
 @Entity()
 export class Leaderboard {
 	@PrimaryGeneratedColumn('uuid')

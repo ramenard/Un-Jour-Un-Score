@@ -44,30 +44,35 @@ export class UsersService {
 
 	public async getCurrentLeaderboardForUser(
 		userId: string,
-	): Promise<UserLeaderBoard> {
+	): Promise<UserLeaderBoard[]> {
 		return await this.dataSource.query(
 			`WITH Ranked AS (SELECT hasPlayed.userId,
-                                user.username,
-                                hasPlayed.score,
-                                ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
-                         FROM has_played as hasPlayed
-                                  JOIN \`user\` as user
-         ON user.id = hasPlayed.userId
-             )
-        SELECT username, score, rankScore
-        FROM Ranked
-        WHERE rankScore <= 10
-           OR rankScore = (SELECT rankScore - 1
-                           FROM Ranked
-                           WHERE userId = ?)
-           OR rankScore = (SELECT rankScore + 1
-                           FROM Ranked
-                           WHERE userId = ?)
-           or rankScore = (SELECT rankScore
-                           FROM Ranked
-                           WHERE userId = ?)
-        ORDER BY rankScore`,
-			[userId, userId, userId],
+                                    user.username,
+                                    hasPlayed.score,
+                                    ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
+                             FROM has_played as hasPlayed
+                                      JOIN \`user\` as user
+             ON user.id = hasPlayed.userId
+                 )
+            SELECT username, score, rankScore
+            FROM Ranked
+            WHERE rankScore = (SELECT rankScore - 2
+                               FROM Ranked
+                               WHERE userId = ?)
+               OR rankScore = (SELECT rankScore - 1
+                               FROM Ranked
+                               WHERE userId = ?)
+               or rankScore = (SELECT rankScore
+                               FROM Ranked
+                               WHERE userId = ?)
+               OR rankScore = (SELECT rankScore + 1
+                               FROM Ranked
+                               WHERE userId = ?)
+               OR rankScore = (SELECT rankScore + 2
+                               FROM Ranked
+                               WHERE userId = ?)
+            ORDER BY rankScore`,
+			[userId, userId, userId, userId, userId],
 		);
 	}
 
@@ -77,5 +82,16 @@ export class UsersService {
 	): Promise<User> {
 		await this.userRepository.update(id, updateUserDto);
 		return this.findOneById(id);
+	}
+
+	public async getUserCanPlay(userId: string): Promise<boolean> {
+		const data: string = await this.dataSource.query(
+			`SELECT id
+             FROM user
+             WHERE id = ?
+               AND gameCoins > 0`,
+			[userId],
+		);
+		return !data;
 	}
 }

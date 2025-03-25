@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import { CreateLeaderboardDto } from './dto/create-leaderboard.dto';
 import { UpdateLeaderboardDto } from './dto/update-leaderboard.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Leaderboard } from './entities/leaderboard.entity';
 import { GamesService } from '../games/games.service';
+import { UserLeaderBoard } from './entities/leaderboard.entity';
 
 @Injectable()
 export class LeaderboardsService {
@@ -18,6 +19,7 @@ export class LeaderboardsService {
 		private readonly leaderboardRepository: Repository<Leaderboard>,
 		@Inject(forwardRef(() => GamesService))
 		private readonly gamesService: GamesService,
+		@InjectDataSource() private readonly dataSource: DataSource,
 	) {}
 
 	public async create(
@@ -60,6 +62,23 @@ export class LeaderboardsService {
 		}
 
 		return leaderboard;
+	}
+
+	public async getUserLeaderboard(): Promise<UserLeaderBoard[]> {
+		return await this.dataSource.query(
+			`WITH Ranked AS (SELECT hasPlayed.userId,
+                                user.username,
+                                hasPlayed.score,
+                                ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
+                         FROM has_played as hasPlayed
+                                  JOIN \`user\` as user
+         ON user.id = hasPlayed.userId
+             )
+        SELECT username, score, rankScore
+        FROM Ranked
+        WHERE rankScore <= 10
+        ORDER BY rankScore`,
+		);
 	}
 
 	public async update(
