@@ -3,18 +3,30 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface LineItem {
+    quantity: number;
+}
+
+// Définition du type des données de la session de paiement Stripe
+interface CheckoutData {
+    status: string;
+    amount_total: number;
+    currency: string;
+    line_items: LineItem[];
+}
+
 export default function SuccessPage() {
     const searchParams = useSearchParams();
     const session_id = searchParams.get('session_id');
-    const [checkoutData, setCheckoutData] = useState<any>(null);
+    const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (session_id) {
             fetch(`/api/checkout-success?session_id=${session_id}`)
                 .then(res => res.json())
-                .then(data => {
-                    if (data.error) {
+                .then((data: CheckoutData | { error: string }) => {
+                    if ('error' in data) {
                         setError(data.error);
                     } else {
                         setCheckoutData(data);
