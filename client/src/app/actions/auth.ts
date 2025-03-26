@@ -37,8 +37,6 @@ export async function login(
 		password: password,
 	};
 
-	console.log('wtf', process.env.API_URL, process.env.PORT)
-
 	const token = await loginUser(loginUserDto);
 	await createSession(token.access_token);
 
@@ -82,7 +80,7 @@ export async function logoutServer() {
 }
 
 const createUser = async (createUserDto: CreateUserDto) => {
-	const res = await fetch(`${process.env.API_URL}${process.env.PORT}/security/register`, {
+	const res = await fetch(`${process.env.API_URL}${process.env.API_PORT}/security/register`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
 		body: JSON.stringify(createUserDto),
