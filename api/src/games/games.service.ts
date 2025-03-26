@@ -38,6 +38,16 @@ export class GamesService {
 		});
 	}
 
+	public async findCurrent(): Promise<Game> {
+		const game = await this.gameRepository.findOne({
+			where: { isActive: true },
+		});
+		if (!game) {
+			throw new NotFoundException();
+		}
+		return game;
+	}
+
 	public async update(
 		id: string,
 		updateGameDto: UpdateGameDto,

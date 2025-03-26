@@ -1,9 +1,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import {RoleEnum, User} from '../users/entities/user.entity';
+import { RoleEnum } from '../users/entities/user.entity';
 import { GamesService } from '../games/games.service';
 import { UsersService } from '../users/users.service';
 import { SecurityService } from '../security/security.service';
 import { CreateGameDto } from '../games/dto/create-game.dto';
+import { LeaderboardsService } from '../leaderboards/leaderboards.service';
+import { CreateLeaderboardDto } from '../leaderboards/dto/create-leaderboard.dto';
+import { Game } from '../games/entities/game.entity';
 
 @Injectable()
 export class DatabaseInitService implements OnModuleInit {
@@ -11,6 +14,7 @@ export class DatabaseInitService implements OnModuleInit {
 		private readonly gameService: GamesService,
 		private readonly userService: UsersService,
 		private readonly securityService: SecurityService,
+		private readonly leaderboardsService: LeaderboardsService,
 	) {}
 
 	async onModuleInit() {
@@ -51,9 +55,17 @@ export class DatabaseInitService implements OnModuleInit {
 				isReady: true,
 				imagePath: '',
 			};
-
 			await this.gameService.create(addCoinFlip);
 			console.log('Game Coin-flip created.');
+
+			const coinFlip: Game = await this.gameService.findCurrent();
+
+			const addLeaderboard: CreateLeaderboardDto = {
+				gameId: coinFlip.id,
+				isClosed: false,
+			};
+			await this.leaderboardsService.create(addLeaderboard);
+			console.log('Leaderboard for Coin-flip created.');
 		} else {
 			console.log('Game already exists.');
 		}
