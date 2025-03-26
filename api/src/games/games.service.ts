@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { Game } from './entities/game.entity';
 
 @Injectable()
@@ -43,5 +43,27 @@ export class GamesService {
 
 	public async remove(id: string): Promise<void> {
 		await this.gameRepository.delete(id);
+	}
+
+	public async findNextGame(): Promise<Game> {
+		let game: Game | null = await this.gameRepository.findOne({
+			where: [{ isActive: false, lastActiveDate: IsNull() }],
+			order: { id: 'DESC' },
+		});
+
+		if (game) {
+			return game;
+		}
+
+		game = await this.gameRepository.findOne({
+			where: { isActive: false, lastActiveDate: Not(IsNull()) },
+			order: { lastActiveDate: 'ASC' },
+		});
+
+		if (game) {
+			return game;
+		}
+
+		throw new NotFoundException('No available games found.');
 	}
 }

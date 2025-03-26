@@ -18,6 +18,7 @@ import { SecurityGuard } from '../security/security.guard';
 export class LeaderboardsController {
 	constructor(private readonly leaderboardsService: LeaderboardsService) {}
 
+	@UseGuards(SecurityGuard)
 	@Post()
 	public create(
 		@Body() createLeaderboardDto: CreateLeaderboardDto,

@@ -16,6 +16,7 @@ import { Leaderboard } from './leaderboards/entities/leaderboard.entity';
 import { HasPlayedModule } from './has-played/has-played.module';
 import { HasPlayed } from './has-played/entities/has-played.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CronModule } from './cron/cron.module';
 
 @Module({
 	imports: [
@@ -50,6 +51,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 		ObtainedBadgesModule,
 		LeaderboardsModule,
 		HasPlayedModule,
+		CronModule,
 		ScheduleModule.forRoot(),
 	],
 	controllers: [],

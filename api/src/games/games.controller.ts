@@ -29,6 +29,11 @@ export class GamesController {
 		return this.gamesService.findAll();
 	}
 
+	@Get('/nextGame')
+	public findTest(): Promise<Game> {
+		return this.gamesService.findNextGame();
+	}
+
 	@Get(':id')
 	public findOne(@Param('id') id: string): Promise<Game> {
 		return this.gamesService.findOne(id);

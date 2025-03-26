@@ -58,7 +58,7 @@ export class LeaderboardsService {
 		});
 
 		if (!leaderboard) {
-			throw new NotFoundException();
+			throw new NotFoundException('No active leaderboard found.');
 		}
 
 		return leaderboard;
@@ -67,19 +67,19 @@ export class LeaderboardsService {
 	public async getUserLeaderboard(): Promise<UserLeaderBoard[]> {
 		return this.dataSource.query(
 			`WITH Ranked AS (SELECT hasPlayed.userId,
-                                user.username,
-                                hasPlayed.score,
-                                ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
-                         FROM has_played as hasPlayed
-                                  JOIN \`user\` as user
-         ON user.id = hasPlayed.userId
-             JOIN \`leaderboard\` as leaderboard ON leaderboard.id = hasPlayed.leaderboardId
+                                    user.username,
+                                    hasPlayed.score,
+                                    ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
+                             FROM has_played as hasPlayed
+                                      JOIN \`user\` as user
+             ON user.id = hasPlayed.userId
+                 JOIN \`leaderboard\` as leaderboard ON leaderboard.id = hasPlayed.leaderboardId
              WHERE leaderboard.isClosed = FALSE
-             )
-        SELECT username, score, rankScore
-        FROM Ranked
-        WHERE rankScore <= 10
-        ORDER BY rankScore`,
+                 )
+            SELECT username, score, rankScore
+            FROM Ranked
+            WHERE rankScore <= 10
+            ORDER BY rankScore`,
 		);
 	}
 
