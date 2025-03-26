@@ -26,7 +26,7 @@ export async function GET(request: Request) {
                 quantity: item.quantity,
             })),
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Failed to retrieve checkout session' }, { status: 500 });
     }
 }

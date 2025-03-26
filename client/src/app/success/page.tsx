@@ -1,13 +1,12 @@
 'use client';
 
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 interface LineItem {
     quantity: number;
 }
 
-// Définition du type des données de la session de paiement Stripe
 interface CheckoutData {
     status: string;
     amount_total: number;
@@ -15,7 +14,7 @@ interface CheckoutData {
     line_items: LineItem[];
 }
 
-export default function SuccessPage() {
+function SuccessContent() {
     const searchParams = useSearchParams();
     const session_id = searchParams.get('session_id');
     const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
@@ -32,12 +31,11 @@ export default function SuccessPage() {
                         setCheckoutData(data);
                     }
                 })
-                .catch(err => setError('Failed to fetch checkout data.'));
+                .catch(() => setError('Failed to fetch checkout data.'));
         }
     }, [session_id]);
 
     if (error) return <p className="text-red-500">{error}</p>;
-
     if (!checkoutData) return <p className="text-white">Loading...</p>;
 
     return (
@@ -49,10 +47,18 @@ export default function SuccessPage() {
             <p className="text-white">Total Amount: {checkoutData.amount_total / 100} {checkoutData.currency.toUpperCase()}</p>
             <p className="text-white">Items Purchased:</p>
             <ul className="text-white">
-                {checkoutData.line_items?.map((item: any, index: number) => (
+                {checkoutData.line_items?.map((item: LineItem, index: number) => (
                     <li key={index}>Quantity: {item.quantity}</li>
                 ))}
             </ul>
         </section>
+    );
+}
+
+export default function SuccessPage() {
+    return (
+        <Suspense fallback={<p>Loading...</p>}>
+            <SuccessContent />
+        </Suspense>
     );
 }

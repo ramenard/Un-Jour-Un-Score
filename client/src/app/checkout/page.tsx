@@ -1,24 +1,19 @@
-'use client'
+'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
-export default function Checkout() {
+function CheckoutContent() {
     const searchParams = useSearchParams();
     const canceled = searchParams.get('canceled') === 'true';
 
-	if (canceled) {
-		console.log(
-			'Order canceled -- continue to shop around and checkout when you’re ready.',
-		);
-	}
-	return (
-        <Button
-            asChild
-            variant="destructive"
-            className="mr-2"
-        >
+    if (canceled) {
+        console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+    }
+
+    return (
+        <Button asChild variant="destructive" className="mr-2">
             <form action="/api/checkout_sessions" method="POST">
                 <section>
                     <button type="submit" role="link">
@@ -27,5 +22,13 @@ export default function Checkout() {
                 </section>
             </form>
         </Button>
-	);
+    );
+}
+
+export default function Checkout() {
+    return (
+        <Suspense fallback={<p>Loading...</p>}>
+            <CheckoutContent />
+        </Suspense>
+    );
 }
