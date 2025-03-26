@@ -12,7 +12,7 @@ export const getTopLeaderboard = cache(async () => {
 	}
 
 	const res = await fetch(
-		`${process.env.API_URL}:${process.env.API_PORT}/leaderboards/user-leaderboard`,
+		`${process.env.API_URL}${process.env.API_PORT}/leaderboards/user-leaderboard`,
 		{
 			method: 'get',
 			headers: {
