@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
+import { useUser } from '@/context/UserContext';
+import { UpdateUserDto } from '@/types/user';
 
 enum CoinFlipSide {
 	HEAD = 'heads',
@@ -23,6 +25,8 @@ export default function Game() {
 	const [total, setTotal] = useState<number>(0);
 	const [isFlipping, setIsFlipping] = useState<boolean>(false);
 	const [isFailed, setIsFailed] = useState<boolean>(false);
+
+    const { user } = useUser()
 
 	useEffect(() => {
 		if (!isFailed) {
@@ -45,6 +49,7 @@ export default function Game() {
 			}
 
 			setIsFailed(true);
+            saveData()
 		},
 		[total],
 	);
@@ -55,6 +60,10 @@ export default function Game() {
 
 			const coin = document.querySelector('#coin');
 			const flipResult = Math.random();
+
+            if(!coin) {
+                return
+            }
 
 			coin.classList.remove(CoinFlipSide.TAIL);
 			coin.classList.remove(CoinFlipSide.HEAD);
@@ -81,6 +90,21 @@ export default function Game() {
 		setIsFlipping(false);
 		setTotal(0);
 	};
+
+    const saveData = async () => {
+        console.log('saveData');
+        const score: { score: number } = { score: total }
+
+        console.log('score page', score);
+
+        await fetch('/api/user/score', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(score),
+        });
+    }
 
 	const activateConfetti = useCallback(() => {
 		const duration = 5 * 1000;

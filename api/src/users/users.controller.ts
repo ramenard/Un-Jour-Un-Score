@@ -51,6 +51,7 @@ export class UsersController {
 		@Param('id') id: string,
 		@Body() updateUserDto: UpdateUserDto,
 	): Promise<User> {
+        console.log('oeeeeeeeeeeeeeeeeeee', updateUserDto)
 		return this.usersService.update(id, updateUserDto);
 	}
 
@@ -64,6 +65,7 @@ export class UsersController {
 		@Param('id') id: string,
 		@Body() score: { score: number },
 	): Promise<void> {
+        console.log('scooooooooooooooooore', score)
 		return this.usersService.updateScore(id, score);
 	}
 }

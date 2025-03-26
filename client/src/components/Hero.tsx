@@ -10,9 +10,12 @@ import { AnimatedGradientText } from '@/components/magicui/animated-gradient-tex
 import { BorderBeam } from '@/components/magicui/border-beam';
 import { useAuth } from '@/context/AuthContext';
 import { redirect } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
+import { UpdateUserDto } from '@/types/user';
 
 export default function Hero() {
 	const { isAuth } = useAuth();
+    const { user, canUserPlay, fetchUser } = useUser()
 
 	const [leaderboardLoading, setLeaderboardLoading] = useState(false);
 	const [userLeaderboardLoading, setUserLeaderboardLoading] = useState(false);
@@ -23,8 +26,6 @@ export default function Hero() {
 	const [userLeaderboardData, setUserLeaderboardData] = useState<
 		LeaderboardData[]
 	>([]);
-
-    const [canUserPlay, setCanUserPlay] = useState(false);
 
 	useEffect(() => {
 		setLeaderboardLoading(true);
@@ -44,10 +45,6 @@ export default function Hero() {
 		});
 	}, []);
 
-    useEffect(() => {
-        fetchCanUserPlay().then((response) => setCanUserPlay(response))
-    }, [canUserPlay]);
-
 	const fetchCurrentLeaderBoard = async (): Promise<LeaderboardData[]> => {
 		const response = await fetch('/api/leaderboard/top', {
 			method: 'GET',
@@ -66,13 +63,22 @@ export default function Hero() {
 		return await response.json();
 	};
 
-    const fetchCanUserPlay = async (): Promise<boolean> => {
-        const response = await fetch('/api/user/can-play', { method: 'GET' });
+    const updateUserGameCoin = async (): Promise<void> => {
+        if (!user) {
+            return;
+        }
 
-        return await response.json();
+        const updateUserDto: UpdateUserDto = { gameCoins: user.gameCoins - 1}
+        await fetch('/api/user', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateUserDto),
+        });
     }
 
-    const navigate = () => {
+    const navigate = async () => {
         if (!isAuth) {
             redirect('/login')
 
@@ -80,6 +86,9 @@ export default function Hero() {
         }
 
         if (canUserPlay) {
+            await updateUserGameCoin()
+            await fetchUser()
+
             redirect('/game')
         }
     }

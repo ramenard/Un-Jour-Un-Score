@@ -11,13 +11,13 @@ export class UpdateUserDto {
 
 	@IsNumber()
 	@IsOptional()
-	gameCoin?: number;
+	gameCoins?: number;
 
 	@IsNumber()
 	@IsOptional()
-	premiumCoin?: number;
+	premiumCoins?: number;
 
 	@IsNumber()
 	@IsOptional()
-	freeCoin?: number;
+	freeCoins?: number;
 }

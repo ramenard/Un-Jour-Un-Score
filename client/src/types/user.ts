@@ -19,6 +19,14 @@ export type CreateUserDto = {
 	password: string;
 };
 
+export type UpdateUserDto = {
+    username?: string;
+    email?: string;
+    gameCoins?: number;
+    premiumCoins?: number;
+    freeCoins?: number;
+}
+
 export type LoginUserDto = {
 	email: string;
 	password: string;
