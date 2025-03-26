@@ -32,6 +32,12 @@ export class GamesService {
 		return game;
 	}
 
+	public async findOneByName(name: string): Promise<Game | null> {
+		return await this.gameRepository.findOne({
+			where: { name: name },
+		});
+	}
+
 	public async update(
 		id: string,
 		updateGameDto: UpdateGameDto,

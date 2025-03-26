@@ -16,5 +16,6 @@ import { jwtConstants } from './constants';
 	],
 	providers: [SecurityService],
 	controllers: [SecurityController],
+	exports: [SecurityService],
 })
 export class SecurityModule {}

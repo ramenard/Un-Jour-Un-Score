@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { RegisterDto } from '../security/dto/register.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserLeaderBoard } from './entities/user.entity';
+import { RoleEnum, User, UserLeaderBoard } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
@@ -19,6 +19,12 @@ export class UsersService {
 
 	public findAll(): Promise<User[]> {
 		return this.userRepository.find({ relations: ['obtainedBadges'] });
+	}
+
+	public async findAdmin(): Promise<User | null> {
+		return await this.userRepository.findOne({
+			where: { role: RoleEnum.ADMIN },
+		});
 	}
 
 	public async findOneByEmail(email: string): Promise<User> {

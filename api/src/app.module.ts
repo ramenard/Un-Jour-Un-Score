@@ -17,6 +17,7 @@ import { HasPlayedModule } from './has-played/has-played.module';
 import { HasPlayed } from './has-played/entities/has-played.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
+import { DatabaseInitModule } from './database-init/database-init.module';
 
 @Module({
 	imports: [
@@ -51,6 +52,7 @@ import { CronModule } from './cron/cron.module';
 		ObtainedBadgesModule,
 		LeaderboardsModule,
 		HasPlayedModule,
+		DatabaseInitModule,
 		CronModule,
 		ScheduleModule.forRoot(),
 	],
