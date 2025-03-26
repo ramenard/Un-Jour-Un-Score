@@ -63,8 +63,6 @@ export default function Hero() {
 		});
 
 		if (!response.ok) {
-			console.log('nulllllllllllllllll');
-
 			setGame(null)
 			return;
 		}
@@ -121,9 +119,11 @@ export default function Hero() {
 			</p>
 			<div className="flex flex-row w-full justify-between pt-10 pl-4 pr-4">
 				{leaderboardLoading || !leaderboardData.length ? (
-					<SpinningText className="text-white">
-						Loading • Loading • Loading •
-					</SpinningText>
+					<div>
+						<SpinningText className="text-white">
+							Loading • Loading • Loading •
+						</SpinningText>
+					</div>
 				) : (
 					<Leaderboard
 						leaderBoardData={leaderboardData}
@@ -156,9 +156,11 @@ export default function Hero() {
 					</Button>
 				</div>
 				{userLeaderboardLoading || !leaderboardData.length ? (
-					<SpinningText className="text-white">
-						Loading • Loading • Loading •
-					</SpinningText>
+					<div>
+						<SpinningText className="text-white">
+							Loading • Loading • Loading •
+						</SpinningText>
+					</div>
 				) : (
 					<Leaderboard
 						leaderBoardData={userLeaderboardData}

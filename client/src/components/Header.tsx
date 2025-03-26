@@ -54,7 +54,7 @@ export default function Header() {
 										/>
 									))}
 								<Button asChild className="mr-2">
-									<Link href="/">Profil</Link>
+									<Link href="/profil">Profil</Link>
 								</Button>
 								<Button
 									asChild

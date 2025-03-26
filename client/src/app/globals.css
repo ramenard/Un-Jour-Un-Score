@@ -20,6 +20,7 @@ body {
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* No repeating */
   min-height: 100vh; /* Ensure full height */
+  overflow-x: hidden;
 }
 
 /*

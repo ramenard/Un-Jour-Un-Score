@@ -24,6 +24,10 @@ export class CronService {
 
 		try {
 			console.log('Cron Job: Starting game...');
+			const leaderboardData = await this.leaderboardsService.getCurrent();
+			await this.leaderboardsService.update(leaderboardData.id, {
+				isClosed: true,
+			});
 			const nextGame = await this.gameService.findNextGame();
 			await this.leaderboardsService.create({
 				gameId: nextGame.id,
@@ -53,9 +57,6 @@ export class CronService {
 		try {
 			console.log('Cron Job: Ending game...');
 			const leaderboardData = await this.leaderboardsService.getCurrent();
-			await this.leaderboardsService.update(leaderboardData.id, {
-				isClosed: true,
-			});
 			await this.gameService.update(leaderboardData.game.id, {
 				isActive: false,
 				lastActiveDate: new Date(),
