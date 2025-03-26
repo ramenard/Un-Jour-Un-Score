@@ -37,6 +37,8 @@ export async function login(
 		password: password,
 	};
 
+	console.log('wtf', process.env.API_URL, process.env.PORT)
+
 	const token = await loginUser(loginUserDto);
 	await createSession(token.access_token);
 
@@ -80,7 +82,7 @@ export async function logoutServer() {
 }
 
 const createUser = async (createUserDto: CreateUserDto) => {
-	const res = await fetch('http://127.0.0.1:3001/security/register', {
+	const res = await fetch(`${process.env.API_URL}:${process.env.PORT}/security/register`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
 		body: JSON.stringify(createUserDto),
@@ -89,7 +91,7 @@ const createUser = async (createUserDto: CreateUserDto) => {
 };
 
 const loginUser = async (loginUserDto: LoginUserDto) => {
-	const res = await fetch('http://127.0.0.1:3001/security/login', {
+	const res = await fetch(`${process.env.API_URL}:${process.env.API_PORT}/security/login`, {
 		method: 'post',
 		headers: { 'Content-Type': 'application/json;charset=utf-8' },
 		body: JSON.stringify(loginUserDto),

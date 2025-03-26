@@ -12,7 +12,7 @@ export const getMe = cache(async () => {
 		throw new Error('Session not found');
 	}
 
-	const res = await fetch(`http://127.0.0.1:3001/users/${session.user.id}`, {
+	const res = await fetch(`${process.env.API_URL}:${process.env.API_PORT}/users/${session.user.id}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json;charset=utf-8',
@@ -33,7 +33,7 @@ export const getCurrentUserLeaderboard = cache(async () => {
 	}
 
 	const res = await fetch(
-		`http://127.0.0.1:3001/users/${session.user.id}/leaderboard`,
+		`${process.env.API_URL}:${process.env.API_PORT}/users/${session.user.id}/leaderboard`,
 		{
 			method: 'GET',
 			headers: {
@@ -56,7 +56,7 @@ export const canPLay = cache(async () => {
 	}
 
 	const res = await fetch(
-		`http://127.0.0.1:3001/users/${session.user.id}/isAble`,
+		`${process.env.API_URL}:${process.env.API_PORT}/users/${session.user.id}/isAble`,
 		{
 			method: 'GET',
 			headers: {
@@ -78,7 +78,7 @@ export const patchUser = cache(async (updateUserDto: UpdateUserDto) => {
 		throw new Error('Session not found');
 	}
 
-	const res = await fetch(`http://127.0.0.1:3001/users/${session.user.id}`, {
+	const res = await fetch(`${process.env.API_URL}:${process.env.API_PORT}/users/${session.user.id}`, {
 		method: 'PATCH',
 		body: JSON.stringify(updateUserDto),
 		headers: {
@@ -99,7 +99,7 @@ export const patchScore = cache(async (score: { score: number }) => {
 		throw new Error('Session not found');
 	}
 
-	await fetch(`http://127.0.0.1:3001/users/${session.user.id}/score`, {
+	await fetch(`${process.env.API_URL}:${process.env.API_PORT}/users/${session.user.id}/score`, {
 		method: 'PATCH',
 		body: JSON.stringify(score),
 		headers: {
