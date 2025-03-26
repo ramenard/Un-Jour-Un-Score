@@ -29,6 +29,11 @@ export class GamesController {
 		return this.gamesService.findAll();
 	}
 
+	@Get('/current')
+	public currentGame(): Promise<Game> {
+		return this.gamesService.findCurrent();
+	}
+
 	@Get('/nextGame')
 	public findTest(): Promise<Game> {
 		return this.gamesService.findNextGame();
