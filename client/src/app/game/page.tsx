@@ -1,7 +1,7 @@
 'use client';
 
 import './style.css';
-import { useCallback, useEffect, useState } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {
 	Dialog,
 	DialogClose,
@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { useUser } from '@/context/UserContext';
 import { redirect } from 'next/navigation';
+import { Leaderboard } from '@/types/leaderboard';
+import { Has_played } from '@/types/has_played';
 
 enum CoinFlipSide {
 	HEAD = 'heads',
@@ -25,6 +27,8 @@ export default function Game() {
 	const [total, setTotal] = useState<number>(0);
 	const [isFlipping, setIsFlipping] = useState<boolean>(false);
 	const [isFailed, setIsFailed] = useState<boolean>(false);
+
+	const hasRun = useRef(false);
 
 	const { canUserPlay, removeUserGameCoin } = useUser();
 
@@ -46,6 +50,30 @@ export default function Game() {
 		});
 	}, [total]);
 
+	const fetchCurrentLeaderboard = useCallback(async () => {
+		const leaderboard: Leaderboard = await fetchLeaderboard();
+
+		const has_played: Has_played[] = await fetchHasPlayed(leaderboard.id);
+
+		if (has_played.length) {
+			console.log('has_played exist !!');
+
+			return;
+		}
+
+		const hasPlayedCreateResponse = await createHasPlayed();
+
+		console.log(hasPlayedCreateResponse);
+	}, []);
+
+	useEffect(() => {
+		if (!hasRun.current) {
+			hasRun.current = true;
+			fetchCurrentLeaderboard();
+		}
+
+	}, [fetchCurrentLeaderboard]);
+
 	const checkResult = useCallback(
 		(userChoice: CoinFlipSide, result: CoinFlipSide) => {
 			if (!result || !userChoice) {
@@ -63,6 +91,33 @@ export default function Game() {
 		},
 		[total, saveData],
 	);
+
+	const fetchLeaderboard = async () => {
+		const leaderboardResponse = await fetch('/api/leaderboard/current', {
+			method: 'GET',
+		});
+
+		return leaderboardResponse.json();
+	};
+
+	const fetchHasPlayed = async (leaderboardId: string) => {
+		const hasPlayedResponse = await fetch(
+			`/api/has_played/current?leaderboardId=${leaderboardId}`,
+			{
+				method: 'GET',
+			},
+		);
+
+		return hasPlayedResponse.json();
+	};
+
+	const createHasPlayed = async () => {
+		const hasPlayedCreateResponse = await fetch(`/api/has_played/create`, {
+			method: 'POST',
+		});
+
+		return hasPlayedCreateResponse.json();
+	};
 
 	const flipCoin = useCallback(
 		(userChoice: CoinFlipSide) => {
@@ -137,6 +192,7 @@ export default function Game() {
 	}, []);
 
 	useEffect(() => {
+		console.log('failed')
 		if (!isFailed) {
 			return;
 		}

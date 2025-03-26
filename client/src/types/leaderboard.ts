@@ -1,6 +1,6 @@
 export type Leaderboard = {
-	leaderboard_id: number;
-	game_id_fk: number;
+	id: string;
+	game: number;
 	playDate: Date;
 	isClosed: boolean;
 };

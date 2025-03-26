@@ -1,5 +1,5 @@
 export type Game = {
-	game_id: number;
+	id: number;
 	name: string;
 	description: string;
 	isActive: boolean;

@@ -27,9 +27,7 @@ export class HasPlayedService {
 		const user = await this.usersService.findOneById(
 			createHasPlayedDto.userId,
 		);
-		const leaderboard = await this.leaderboardsService.findOne(
-			createHasPlayedDto.leaderboardId,
-		);
+		const leaderboard = await this.leaderboardsService.getCurrent();
 
 		if (!user || !leaderboard) {
 			throw new Error('User or Leaderboard not found');
@@ -54,11 +52,11 @@ export class HasPlayedService {
 			.leftJoinAndSelect('HasPlayed.leaderboard', 'leaderboard');
 
 		if (userId) {
-			queryBuilder.where('HasPlayed.userId = :userId', { userId });
+			queryBuilder.andWhere('HasPlayed.userId = :userId', { userId });
 		}
 
 		if (leaderboardId) {
-			queryBuilder.where('HasPlayed.leaderboardId = :leaderboardId', {
+			queryBuilder.andWhere('HasPlayed.leaderboardId = :leaderboardId', {
 				leaderboardId,
 			});
 		}

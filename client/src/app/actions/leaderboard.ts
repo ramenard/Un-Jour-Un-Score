@@ -24,3 +24,26 @@ export const getTopLeaderboard = cache(async () => {
 
 	return await res.json();
 });
+
+export const getCurrentLeaderboard = cache(async () => {
+	const session = await verifySession();
+
+	const token = (await cookies()).get('session')?.value;
+
+	if (!session || !token) {
+		throw new Error('Session not found');
+	}
+
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/leaderboards/current`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				Authorization: `Bearer ${token}`,
+			},
+		},
+	);
+
+	return await res.json();
+});
