@@ -1,6 +1,6 @@
 'use client';
 
-import './style.css';
+import '../app/game/rockPaperScissors.css';
 import { useCallback, useEffect, useState } from 'react';
 import {
 	Dialog,
@@ -14,6 +14,8 @@ import {
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import QuestionMark from '@/components/QuestionMark';
+import { redirect } from 'next/navigation';
+import { useUser } from '@/context/UserContext';
 
 enum RockPaperScissorsEnum {
 	ROCK = 'rock',
@@ -26,6 +28,20 @@ export default function RockPaperScissors() {
 	const [total, setTotal] = useState<number>(0);
 	const [isBlinking, setIsBlinking] = useState<boolean>(false);
 	const [isFailed, setIsFailed] = useState<boolean>(false);
+
+	const { canUserPlay, removeUserGameCoin } = useUser();
+
+	const saveData = useCallback(async () => {
+		const score: { score: number } = { score: total };
+
+		await fetch('/api/user/score', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(score),
+		});
+	}, [total]);
 
 	const checkResult = useCallback(
 		(userChoice: RockPaperScissorsEnum, result: RockPaperScissorsEnum) => {
@@ -42,8 +58,9 @@ export default function RockPaperScissors() {
 			}
 
 			setIsFailed(true);
+			saveData();
 		},
-		[total],
+		[total, saveData],
 	);
 
 	const playGame = useCallback(
@@ -131,6 +148,10 @@ export default function RockPaperScissors() {
 		activateConfetti();
 	}, [isFailed, activateConfetti]);
 
+	const replay = useCallback(async () => {
+		await removeUserGameCoin();
+	}, [removeUserGameCoin]);
+
 	return (
 		<div className="nes-theme min-h-screen">
 			<div className="pt-42 flex justify-center">
@@ -202,19 +223,49 @@ export default function RockPaperScissors() {
 				open={isFailed}
 				onOpenChange={(open) => !open && resetData()}
 			>
-				<DialogContent className="sm:max-w-md nes-theme">
+				<DialogContent
+					onInteractOutside={(e) => {
+						e.preventDefault();
+					}}
+					className="sm:max-w-md nes-theme"
+				>
 					<DialogHeader>
 						<DialogTitle>Partie Terminée</DialogTitle>
 						<DialogDescription>
 							Votre score: {total}
 						</DialogDescription>
 					</DialogHeader>
-					<DialogFooter className="sm:justify-start">
-						<DialogClose asChild>
-							<Button type="button" variant="secondary">
-								Close
-							</Button>
-						</DialogClose>
+					<DialogFooter
+						className={
+							canUserPlay
+								? '!justify-between flex flex-row'
+								: '!justify-center flex flex-row'
+						}
+					>
+						<div className="self-start">
+							<DialogClose asChild>
+								<Button
+									type="button"
+									variant="secondary"
+									onClick={() => redirect('/')}
+								>
+									Retour au menu
+								</Button>
+							</DialogClose>
+						</div>
+						{canUserPlay && (
+							<div>
+								<DialogClose asChild>
+									<Button
+										type="button"
+										variant="secondary"
+										onClick={replay}
+									>
+										Rejouer
+									</Button>
+								</DialogClose>
+							</div>
+						)}
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

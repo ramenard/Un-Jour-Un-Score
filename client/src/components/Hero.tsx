@@ -10,6 +10,7 @@ import { BorderBeam } from '@/components/magicui/border-beam';
 import { useAuth } from '@/context/AuthContext';
 import { redirect } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
+import { Game } from '@/types/game';
 
 export default function Hero() {
 	const { isAuth } = useAuth();
@@ -25,12 +26,18 @@ export default function Hero() {
 		LeaderboardData[]
 	>([]);
 
+	const [game, setGame] = useState<Game | null>(null);
+
 	const fetchCurrentLeaderBoard = useCallback(async (): Promise<
 		LeaderboardData[]
 	> => {
 		const response = await fetch('/api/leaderboard/top', {
 			method: 'GET',
 		});
+
+		if (!response.ok) {
+			return []
+		}
 
 		return await response.json();
 	}, []);
@@ -42,7 +49,29 @@ export default function Hero() {
 			method: 'GET',
 		});
 
+		if (!response.ok) {
+			return []
+		}
+
 		return await response.json();
+	}, []);
+
+	const fetchCurrentGame = useCallback(async () => {
+		console.log()
+		const response: Response | null = await fetch('/api/game/current', {
+			method: 'GET',
+		});
+
+		if (!response.ok) {
+			console.log('nulllllllllllllllll');
+
+			setGame(null)
+			return;
+		}
+
+		const game: Game | null = await response.json();
+
+		setGame(game)
 	}, []);
 
 	useEffect(() => {
@@ -63,6 +92,10 @@ export default function Hero() {
 		});
 	}, [fetchCurrentUserLeaderBoard]);
 
+	useEffect(() => {
+		fetchCurrentGame();
+	}, [fetchCurrentGame]);
+
 	const navigate = async () => {
 		if (!isAuth) {
 			redirect('/login');
@@ -70,11 +103,11 @@ export default function Hero() {
 			return;
 		}
 
-		if (canUserPlay) {
+		if (canUserPlay && game) {
 			await removeUserGameCoin();
 			await fetchUser();
 
-			redirect('/game');
+			redirect(`/game?name=${game.name}`);
 		}
 	};
 
@@ -104,7 +137,7 @@ export default function Hero() {
 						size="lg"
 						variant="outline"
 						onClick={navigate}
-						disabled={isAuth && !canUserPlay}
+						disabled={isAuth && !canUserPlay && !!game}
 					>
 						<AnimatedGradientText className="text-sm font-medium self-center">
 							Jouer

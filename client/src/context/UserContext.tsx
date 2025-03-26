@@ -23,11 +23,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const fetchUser = useCallback(async () => {
 		const responseUser = await fetch('/api/user/me', { method: 'GET' });
+
+		if (!responseUser.ok) {
+			return
+		}
+
 		const user: User = await responseUser.json();
 
 		const responseCanPLay = await fetch('api/user/can-play', {
 			method: 'GET',
 		});
+
+		if (!responseCanPLay.ok) {
+			return
+		}
 		const canPlay = await responseCanPLay.json();
 
 		setUser(user);
