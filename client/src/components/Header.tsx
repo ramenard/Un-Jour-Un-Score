@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
@@ -12,10 +12,6 @@ export default function Header() {
 	const { isAuth, userRole, refreshAuth } = useAuth();
 	const { user } = useUser();
 	const router = useRouter();
-
-	useEffect(() => {
-		console.log('premium', user?.premiumCoins);
-	});
 
 	const handleLogout = async () => {
 		await fetch('/api/logout', { method: 'POST' });

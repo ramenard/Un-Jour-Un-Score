@@ -7,47 +7,46 @@ import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly dataSource: DataSource,
-    ) {
-    }
+	constructor(
+		@InjectRepository(User)
+		private readonly userRepository: Repository<User>,
+		private readonly dataSource: DataSource,
+	) {}
 
-    public create(registerDto: RegisterDto): Promise<User> {
-        return this.userRepository.save(registerDto);
-    }
+	public create(registerDto: RegisterDto): Promise<User> {
+		return this.userRepository.save(registerDto);
+	}
 
-    public findAll(): Promise<User[]> {
-        return this.userRepository.find({ relations: ['obtainedBadges'] });
-    }
+	public findAll(): Promise<User[]> {
+		return this.userRepository.find({ relations: ['obtainedBadges'] });
+	}
 
-    public async findOneByEmail(email: string): Promise<User> {
-        const user = await this.userRepository.findOne({
-            where: { email },
-            select: ['id', 'username', 'email', 'password', 'role'],
-        });
-        if (!user) {
-            throw new NotFoundException();
-        }
+	public async findOneByEmail(email: string): Promise<User> {
+		const user = await this.userRepository.findOne({
+			where: { email },
+			select: ['id', 'username', 'email', 'password', 'role'],
+		});
+		if (!user) {
+			throw new NotFoundException();
+		}
 
-        return user;
-    }
+		return user;
+	}
 
-    public async findOneById(id: string): Promise<User> {
-        const user = await this.userRepository.findOne({ where: { id: id } });
-        if (!user) {
-            throw new NotFoundException();
-        }
+	public async findOneById(id: string): Promise<User> {
+		const user = await this.userRepository.findOne({ where: { id: id } });
+		if (!user) {
+			throw new NotFoundException();
+		}
 
-        return user;
-    }
+		return user;
+	}
 
-    public async getCurrentLeaderboardForUser(
-        userId: string,
-    ): Promise<UserLeaderBoard[]> {
-        return await this.dataSource.query(
-            `WITH Ranked AS (SELECT hasPlayed.userId,
+	public async getCurrentLeaderboardForUser(
+		userId: string,
+	): Promise<UserLeaderBoard[]> {
+		return await this.dataSource.query(
+			`WITH Ranked AS (SELECT hasPlayed.userId,
                                     user.username,
                                     hasPlayed.score,
                                     ROW_NUMBER() OVER ( ORDER BY hasPlayed.score DESC ) AS rankScore
@@ -72,49 +71,49 @@ export class UsersService {
                                FROM Ranked
                                WHERE userId = ?)
             ORDER BY rankScore`,
-            [userId, userId, userId, userId],
-        );
-    }
+			[userId, userId, userId, userId],
+		);
+	}
 
-    public async update(
-        id: string,
-        updateUserDto: UpdateUserDto,
-    ): Promise<User> {
-        await this.userRepository.update(id, updateUserDto);
+	public async update(
+		id: string,
+		updateUserDto: UpdateUserDto,
+	): Promise<User> {
+		await this.userRepository.update(id, updateUserDto);
 
-        return this.findOneById(id);
-    }
+		return this.findOneById(id);
+	}
 
-    public async getUserCanPlay(userId: string): Promise<boolean> {
-        const data: string[] = await this.dataSource.query(
-            `SELECT id
+	public async getUserCanPlay(userId: string): Promise<boolean> {
+		const data: string[] = await this.dataSource.query(
+			`SELECT id
              FROM user
              WHERE id = ?
                AND gameCoins > 0`,
-            [userId],
-        );
+			[userId],
+		);
 
-        return !!data.length;
-    }
+		return !!data.length;
+	}
 
-    public async updateTries(id: string): Promise<void> {
-        await this.userRepository
-            .createQueryBuilder('user')
-            .leftJoin('user.hasPlayed', 'has_played')
-            .update('has_played')
-            .set({
-                tries: () => 'tries + 1',
-            })
-            .where('user.id = :id', { id })
-            .execute();
-    }
+	public async updateTries(id: string): Promise<void> {
+		await this.userRepository
+			.createQueryBuilder('user')
+			.leftJoin('user.hasPlayed', 'has_played')
+			.update('has_played')
+			.set({
+				tries: () => 'tries + 1',
+			})
+			.where('user.id = :id', { id })
+			.execute();
+	}
 
-    public async updateScore(
-        id: string,
-        score: { score: number },
-    ): Promise<void> {
-        await this.dataSource.query(
-            `UPDATE
+	public async updateScore(
+		id: string,
+		score: { score: number },
+	): Promise<void> {
+		await this.dataSource.query(
+			`UPDATE
                  \`has_played\`
                  LEFT JOIN leaderboard
              ON leaderboard.id = has_played.leaderboardId
@@ -123,7 +122,7 @@ export class UsersService {
              WHERE
                  \`userId\` = ?
                AND leaderboard.isClosed = false`,
-            [score.score, id],
-        );
-    }
+			[score.score, id],
+		);
+	}
 }

@@ -27,7 +27,6 @@ export class LeaderboardsController {
 
 	@Get('user-leaderboard')
 	public getCurrentLeaderboard(): Promise<UserLeaderBoard[]> {
-		console.log('salete');
 		return this.leaderboardsService.getUserLeaderboard();
 	}
 

@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { useUser } from '@/context/UserContext';
-import { UpdateUserDto } from '@/types/user';
+import { redirect } from 'next/navigation';
 
 enum CoinFlipSide {
 	HEAD = 'heads',
@@ -26,15 +26,25 @@ export default function Game() {
 	const [isFlipping, setIsFlipping] = useState<boolean>(false);
 	const [isFailed, setIsFailed] = useState<boolean>(false);
 
-    const { user } = useUser()
+	const { canUserPlay, removeUserGameCoin } = useUser();
 
-	useEffect(() => {
-		if (!isFailed) {
-			return;
-		}
+	const resetData = useCallback(() => {
+		setIsFailed(false);
+		setIsFlipping(false);
+		setTotal(0);
+	}, []);
 
-		activateConfetti();
-	}, [isFailed]);
+	const saveData = useCallback(async () => {
+		const score: { score: number } = { score: total };
+
+		await fetch('/api/user/score', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(score),
+		});
+	}, [total]);
 
 	const checkResult = useCallback(
 		(userChoice: CoinFlipSide, result: CoinFlipSide) => {
@@ -49,9 +59,9 @@ export default function Game() {
 			}
 
 			setIsFailed(true);
-            saveData()
+			saveData();
 		},
-		[total],
+		[total, saveData],
 	);
 
 	const flipCoin = useCallback(
@@ -61,9 +71,9 @@ export default function Game() {
 			const coin = document.querySelector('#coin');
 			const flipResult = Math.random();
 
-            if(!coin) {
-                return
-            }
+			if (!coin) {
+				return;
+			}
 
 			coin.classList.remove(CoinFlipSide.TAIL);
 			coin.classList.remove(CoinFlipSide.HEAD);
@@ -85,26 +95,9 @@ export default function Game() {
 		[checkResult],
 	);
 
-	const resetData = () => {
-		setIsFailed(false);
-		setIsFlipping(false);
-		setTotal(0);
-	};
-
-    const saveData = async () => {
-        console.log('saveData');
-        const score: { score: number } = { score: total }
-
-        console.log('score page', score);
-
-        await fetch('/api/user/score', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(score),
-        });
-    }
+	const replay = useCallback(async () => {
+		await removeUserGameCoin();
+	}, [removeUserGameCoin]);
 
 	const activateConfetti = useCallback(() => {
 		const duration = 5 * 1000;
@@ -141,7 +134,15 @@ export default function Game() {
 				origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
 			});
 		}, 250);
-	});
+	}, []);
+
+	useEffect(() => {
+		if (!isFailed) {
+			return;
+		}
+
+		activateConfetti();
+	}, [isFailed, activateConfetti]);
 
 	return (
 		<div className="nes-theme min-h-screen">
@@ -183,19 +184,49 @@ export default function Game() {
 				open={isFailed}
 				onOpenChange={(open) => !open && resetData()}
 			>
-				<DialogContent className="sm:max-w-md nes-theme">
+				<DialogContent
+					onInteractOutside={(e) => {
+						e.preventDefault();
+					}}
+					className="sm:max-w-md nes-theme"
+				>
 					<DialogHeader>
 						<DialogTitle>Partie Terminée</DialogTitle>
 						<DialogDescription>
 							Votre score: {total}
 						</DialogDescription>
 					</DialogHeader>
-					<DialogFooter className="sm:justify-start">
-						<DialogClose asChild>
-							<Button type="button" variant="secondary">
-								Close
-							</Button>
-						</DialogClose>
+					<DialogFooter
+						className={
+							canUserPlay
+								? '!justify-between flex flex-row'
+								: '!justify-center flex flex-row'
+						}
+					>
+						<div className="self-start">
+							<DialogClose asChild>
+								<Button
+									type="button"
+									variant="secondary"
+									onClick={() => redirect('/')}
+								>
+									Retour au menu
+								</Button>
+							</DialogClose>
+						</div>
+						{canUserPlay && (
+							<div>
+								<DialogClose asChild>
+									<Button
+										type="button"
+										variant="secondary"
+										onClick={replay}
+									>
+										Rejouer
+									</Button>
+								</DialogClose>
+							</div>
+						)}
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

@@ -27,14 +27,6 @@ export default function RockPaperScissors() {
 	const [isBlinking, setIsBlinking] = useState<boolean>(false);
 	const [isFailed, setIsFailed] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (!isFailed) {
-			return;
-		}
-
-		activateConfetti();
-	}, [isFailed]);
-
 	const checkResult = useCallback(
 		(userChoice: RockPaperScissorsEnum, result: RockPaperScissorsEnum) => {
 			if (!result || !userChoice) {
@@ -61,6 +53,10 @@ export default function RockPaperScissors() {
 			const questionMarkDiv = document.querySelector('#questionMarkDiv');
 			const flipResult = Math.random();
 
+			if (!questionMarkDiv) {
+				return;
+			}
+
 			questionMarkDiv.classList.add('blink');
 
 			const result: RockPaperScissorsEnum =
@@ -70,11 +66,9 @@ export default function RockPaperScissors() {
 						? RockPaperScissorsEnum.PAPER
 						: RockPaperScissorsEnum.SCISSORS;
 
-			// const result: RockPaperScissorsEnum = RockPaperScissorsEnum.ROCK
-
 			setTimeout(() => {
 				questionMarkDiv.classList.remove('blink');
-			}, 3500);
+			}, 3000);
 
 			//This timeout is for waiting  for the animation of the flipping coin
 			setTimeout(() => {
@@ -127,7 +121,15 @@ export default function RockPaperScissors() {
 				origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
 			});
 		}, 250);
-	});
+	}, []);
+
+	useEffect(() => {
+		if (!isFailed) {
+			return;
+		}
+
+		activateConfetti();
+	}, [isFailed, activateConfetti]);
 
 	return (
 		<div className="nes-theme min-h-screen">

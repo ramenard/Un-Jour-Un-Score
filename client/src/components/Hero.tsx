@@ -1,8 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SpinningText } from '@/components/magicui/spinning-text';
 import { LeaderboardData } from '@/types/leaderboard';
 import Leaderboard from '@/components/Leaderboard';
@@ -11,11 +10,10 @@ import { BorderBeam } from '@/components/magicui/border-beam';
 import { useAuth } from '@/context/AuthContext';
 import { redirect } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
-import { UpdateUserDto } from '@/types/user';
 
 export default function Hero() {
 	const { isAuth } = useAuth();
-    const { user, canUserPlay, fetchUser } = useUser()
+	const { canUserPlay, fetchUser, removeUserGameCoin } = useUser();
 
 	const [leaderboardLoading, setLeaderboardLoading] = useState(false);
 	const [userLeaderboardLoading, setUserLeaderboardLoading] = useState(false);
@@ -27,6 +25,26 @@ export default function Hero() {
 		LeaderboardData[]
 	>([]);
 
+	const fetchCurrentLeaderBoard = useCallback(async (): Promise<
+		LeaderboardData[]
+	> => {
+		const response = await fetch('/api/leaderboard/top', {
+			method: 'GET',
+		});
+
+		return await response.json();
+	}, []);
+
+	const fetchCurrentUserLeaderBoard = useCallback(async (): Promise<
+		LeaderboardData[]
+	> => {
+		const response = await fetch('/api/user/leaderboard', {
+			method: 'GET',
+		});
+
+		return await response.json();
+	}, []);
+
 	useEffect(() => {
 		setLeaderboardLoading(true);
 
@@ -34,7 +52,7 @@ export default function Hero() {
 			setLeaderboardData(leaderBoardData);
 			setLeaderboardLoading(false);
 		});
-	}, []);
+	}, [fetchCurrentLeaderBoard]);
 
 	useEffect(() => {
 		setUserLeaderboardLoading(true);
@@ -43,55 +61,22 @@ export default function Hero() {
 			setUserLeaderboardData(leaderBoardData);
 			setUserLeaderboardLoading(false);
 		});
-	}, []);
+	}, [fetchCurrentUserLeaderBoard]);
 
-	const fetchCurrentLeaderBoard = async (): Promise<LeaderboardData[]> => {
-		const response = await fetch('/api/leaderboard/top', {
-			method: 'GET',
-		});
+	const navigate = async () => {
+		if (!isAuth) {
+			redirect('/login');
 
-		return await response.json();
+			return;
+		}
+
+		if (canUserPlay) {
+			await removeUserGameCoin();
+			await fetchUser();
+
+			redirect('/game');
+		}
 	};
-
-	const fetchCurrentUserLeaderBoard = async (): Promise<
-		LeaderboardData[]
-	> => {
-		const response = await fetch('/api/user/leaderboard', {
-			method: 'GET',
-		});
-
-		return await response.json();
-	};
-
-    const updateUserGameCoin = async (): Promise<void> => {
-        if (!user) {
-            return;
-        }
-
-        const updateUserDto: UpdateUserDto = { gameCoins: user.gameCoins - 1}
-        await fetch('/api/user', {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updateUserDto),
-        });
-    }
-
-    const navigate = async () => {
-        if (!isAuth) {
-            redirect('/login')
-
-            return;
-        }
-
-        if (canUserPlay) {
-            await updateUserGameCoin()
-            await fetchUser()
-
-            redirect('/game')
-        }
-    }
 
 	return (
 		<section className="py-20 text-center">
@@ -118,14 +103,13 @@ export default function Hero() {
 						className="relative overflow-hidden"
 						size="lg"
 						variant="outline"
-                        onClick={navigate}
-                        disabled={isAuth && !canUserPlay}
+						onClick={navigate}
+						disabled={isAuth && !canUserPlay}
 					>
-
-							<AnimatedGradientText className="text-sm font-medium self-center">
-								Jouer
-								<BorderBeam duration={8} size={100} />
-							</AnimatedGradientText>
+						<AnimatedGradientText className="text-sm font-medium self-center">
+							Jouer
+							<BorderBeam duration={8} size={100} />
+						</AnimatedGradientText>
 						<BorderBeam
 							size={40}
 							initialOffset={20}

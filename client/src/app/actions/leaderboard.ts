@@ -21,7 +21,6 @@ export const getTopLeaderboard = cache(async () => {
 			},
 		},
 	);
-	const data = await res.json();
-	console.log('prout', data);
-	return data;
+
+	return await res.json();
 });
