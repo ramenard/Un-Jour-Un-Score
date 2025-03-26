@@ -84,14 +84,15 @@ export class UsersService {
 	}
 
 	public async getUserCanPlay(userId: string): Promise<boolean> {
-		const data: string = await this.dataSource.query(
+		const data: string[] = await this.dataSource.query(
 			`SELECT id
              FROM user
              WHERE id = ?
                AND gameCoins > 0`,
 			[userId],
 		);
-		return !data;
+
+		return !!data.length;
 	}
 
 	public async updateTries(id: string): Promise<void> {

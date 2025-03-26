@@ -24,14 +24,14 @@ export class UsersController {
 		return this.usersService.findAll();
 	}
 
+    @Get('profile')
+    public getProfile(@Req() req: RequestWithUserInfo): Promise<User> {
+        return this.usersService.findOneById(req.user.id);
+    }
+
 	@Get(':id')
 	public findOne(@Param('id') id: string): Promise<User> {
 		return this.usersService.findOneById(id);
-	}
-
-	@Get('profile')
-	public getProfile(@Req() req: RequestWithUserInfo): Promise<User> {
-		return this.usersService.findOneById(req.user.id);
 	}
 
 	@Get(':id/leaderboard')
@@ -41,17 +41,17 @@ export class UsersController {
 		return this.usersService.getCurrentLeaderboardForUser(id);
 	}
 
+    @Get(':id/isAble')
+    public getUserAbility(@Param('id') id: string): Promise<boolean> {
+        return this.usersService.getUserCanPlay(id);
+    }
+
 	@Patch(':id')
 	public update(
 		@Param('id') id: string,
 		@Body() updateUserDto: UpdateUserDto,
 	): Promise<User> {
 		return this.usersService.update(id, updateUserDto);
-	}
-
-	@Get(':id/isAble')
-	public getUserAbility(@Param('id') id: string): Promise<boolean> {
-		return this.usersService.getUserCanPlay(id);
 	}
 
 	@Patch(':id/tries')

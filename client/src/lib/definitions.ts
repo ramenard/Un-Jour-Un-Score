@@ -7,12 +7,12 @@ export const LoginFormSchema = z.object({
 		.trim(),
 	password: z
 		.string()
-		.min(8, { message: "Etre d'au moins 8 caractères." })
-		.regex(/[a-zA-Z]/, { message: 'Contenir au moins 1 lettre.' })
-		.regex(/[0-9]/, { message: 'Contenir au moins 1 chiffre.' })
-		.regex(/[^a-zA-Z0-9]/, {
-			message: 'Contenir au moins 1 caractère spécial.',
-		})
+		// .min(8, { message: "Etre d'au moins 8 caractères." })
+		// .regex(/[a-zA-Z]/, { message: 'Contenir au moins 1 lettre.' })
+		// .regex(/[0-9]/, { message: 'Contenir au moins 1 chiffre.' })
+		// .regex(/[^a-zA-Z0-9]/, {
+		// 	message: 'Contenir au moins 1 caractère spécial.',
+		// })
 		.trim(),
 });
 

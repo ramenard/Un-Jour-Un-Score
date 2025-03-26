@@ -9,6 +9,7 @@ import Leaderboard from '@/components/Leaderboard';
 import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text';
 import { BorderBeam } from '@/components/magicui/border-beam';
 import { useAuth } from '@/context/AuthContext';
+import { redirect } from 'next/navigation';
 
 export default function Hero() {
 	const { isAuth } = useAuth();
@@ -22,6 +23,8 @@ export default function Hero() {
 	const [userLeaderboardData, setUserLeaderboardData] = useState<
 		LeaderboardData[]
 	>([]);
+
+    const [canUserPlay, setCanUserPlay] = useState(false);
 
 	useEffect(() => {
 		setLeaderboardLoading(true);
@@ -41,6 +44,10 @@ export default function Hero() {
 		});
 	}, []);
 
+    useEffect(() => {
+        fetchCanUserPlay().then((response) => setCanUserPlay(response))
+    }, [canUserPlay]);
+
 	const fetchCurrentLeaderBoard = async (): Promise<LeaderboardData[]> => {
 		const response = await fetch('/api/leaderboard/top', {
 			method: 'GET',
@@ -58,6 +65,24 @@ export default function Hero() {
 
 		return await response.json();
 	};
+
+    const fetchCanUserPlay = async (): Promise<boolean> => {
+        const response = await fetch('/api/user/can-play', { method: 'GET' });
+
+        return await response.json();
+    }
+
+    const navigate = () => {
+        if (!isAuth) {
+            redirect('/login')
+
+            return;
+        }
+
+        if (canUserPlay) {
+            redirect('/game')
+        }
+    }
 
 	return (
 		<section className="py-20 text-center">
@@ -84,16 +109,14 @@ export default function Hero() {
 						className="relative overflow-hidden"
 						size="lg"
 						variant="outline"
+                        onClick={navigate}
+                        disabled={isAuth && !canUserPlay}
 					>
-						<Link
-							href={isAuth ? '/game' : '/login'}
-							className="text-black flex items-end"
-						>
+
 							<AnimatedGradientText className="text-sm font-medium self-center">
 								Jouer
 								<BorderBeam duration={8} size={100} />
 							</AnimatedGradientText>
-						</Link>
 						<BorderBeam
 							size={40}
 							initialOffset={20}
@@ -106,7 +129,7 @@ export default function Hero() {
 						/>
 					</Button>
 				</div>
-				{userLeaderboardLoading ? (
+				{userLeaderboardLoading || !leaderboardData.length ? (
 					<SpinningText className="text-white">
 						Loading • Loading • Loading •
 					</SpinningText>
