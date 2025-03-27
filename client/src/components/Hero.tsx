@@ -57,7 +57,6 @@ export default function Hero() {
 	}, []);
 
 	const fetchCurrentGame = useCallback(async () => {
-		console.log();
 		const response: Response | null = await fetch('/api/game/current', {
 			method: 'GET',
 		});

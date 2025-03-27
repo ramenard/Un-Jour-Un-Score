@@ -19,12 +19,10 @@ function GameContent() {
 		const has_played: Has_played[] = await fetchHasPlayed(leaderboard.id);
 
 		if (has_played.length) {
-			console.log('has_played exist !!');
 			return;
 		}
 
-		const hasPlayedCreateResponse = await createHasPlayed();
-		console.log(hasPlayedCreateResponse);
+		await createHasPlayed();
 	}, []);
 
 	useEffect(() => {

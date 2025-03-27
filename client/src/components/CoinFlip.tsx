@@ -137,7 +137,6 @@ export default function CoinFlip() {
 	}, []);
 
 	useEffect(() => {
-		console.log('failed');
 		if (!isFailed) {
 			return;
 		}
