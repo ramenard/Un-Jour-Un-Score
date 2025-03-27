@@ -48,9 +48,9 @@ const Header: React.FC = () => {
 								{user &&
 									[
 										...Array(
-											user.premiumCoins > 6
+											user.gameCoins > 6
 												? 6
-												: user.premiumCoins,
+												: user.gameCoins,
 										),
 									].map((_, i) => (
 										<i
