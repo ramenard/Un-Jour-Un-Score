@@ -19,7 +19,7 @@
     "clsx": "^2.1.1",
     "jose": "^6.0.10",
     "lucide-react": "^0.475.0",
-    "motion": "^12.5.0",
+    "motion": "^12.6.2",
     "nes.css": "^2.2.1",
     "next": "^15.1.7",
     "next-safe-action": "^7.10.4",

@@ -46,7 +46,13 @@ const Header: React.FC = () => {
 						<>
 							<div className="flex flex-row items-center">
 								{user &&
-									[...Array(user?.gameCoins)].map((_, i) => (
+									[
+										...Array(
+											user.premiumCoins > 6
+												? 6
+												: user.premiumCoins,
+										),
+									].map((_, i) => (
 										<i
 											key={i}
 											className="nes-icon coin is-medium"
@@ -62,7 +68,7 @@ const Header: React.FC = () => {
 								</Button>
 								<Button
 									asChild
-									variant="destructive"
+									variant="default"
 									className="mr-2"
 								>
 									<Link href="/checkout">Boutique</Link>

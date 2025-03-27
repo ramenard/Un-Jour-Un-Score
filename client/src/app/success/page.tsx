@@ -2,6 +2,9 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { BorderBeam } from '@/components/magicui/border-beam';
+import { useUser } from '@/context/UserContext';
+import { UpdateUserDto } from '@/types/user';
 
 interface LineItem {
 	quantity: number;
@@ -14,11 +17,36 @@ interface CheckoutData {
 	line_items: LineItem[];
 }
 
-function SuccessContent() {
+const SuccessContent: React.FC = () => {
 	const searchParams = useSearchParams();
 	const session_id = searchParams.get('session_id');
 	const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
 	const [error, setError] = useState<string | null>(null);
+
+	const { user, fetchUser } = useUser();
+
+	useEffect(() => {
+		fetchUser();
+	}, [fetchUser]);
+
+	useEffect(() => {
+		if (!user || !checkoutData) {
+			return;
+		}
+
+		const updatePremiumCoins: UpdateUserDto = {
+			premiumCoins:
+				user.premiumCoins + checkoutData.line_items[0].quantity,
+		};
+
+		fetch('/api/user', {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatePremiumCoins),
+		});
+	}, [user, checkoutData]);
 
 	useEffect(() => {
 		if (session_id) {
@@ -39,30 +67,72 @@ function SuccessContent() {
 	if (!checkoutData) return <p className="text-white">Loading...</p>;
 
 	return (
-		<section id="success">
-			<p className="text-white">
-				We appreciate your business! A confirmation email will be sent.
-				If you have any questions, please email{' '}
-				<a href="mailto:orders@example.com" className="text-white">
-					orders@example.com
-				</a>
-				.
-			</p>
-			<p className="text-white">
-				Total Amount: {checkoutData.amount_total / 100}{' '}
-				{checkoutData.currency.toUpperCase()}
-			</p>
-			<p className="text-white">Items Purchased:</p>
-			<ul className="text-white">
-				{checkoutData.line_items?.map(
-					(item: LineItem, index: number) => (
-						<li key={index}>Quantity: {item.quantity}</li>
-					),
-				)}
-			</ul>
-		</section>
+		<div className="nes-theme min-h-screen flex flex-col items-center">
+			<div
+				className="nes-container"
+				style={{ maxWidth: '70rem', width: '100%' }}
+			>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+				>
+					<i
+						className="nes-bcrikko"
+						style={{ marginRight: '16px' }}
+					></i>
+					<div>
+						<section className="message-list">
+							<section className="message -left">
+								<div className="nes-balloon from-left">
+									<p className="text-black">
+										Merci pour votre achat!
+									</p>
+								</div>
+							</section>
+
+							<section className="message -left">
+								<div className="nes-balloon from-left">
+									<p className="text-black">
+										Somme totale:{' '}
+										{checkoutData.amount_total / 100}{' '}
+										{checkoutData.currency.toUpperCase()}
+									</p>
+								</div>
+							</section>
+
+							<section className="message -left">
+								<div className="nes-balloon from-left">
+									{checkoutData.line_items?.map(
+										(item: LineItem, index: number) => (
+											<li key={index}>
+												Quantité: {item.quantity} pièces
+												premiums
+											</li>
+										),
+									)}
+								</div>
+							</section>
+						</section>
+					</div>
+				</div>
+				<BorderBeam
+					duration={6}
+					size={600}
+					className="from-transparent via-red-500 to-transparent"
+				/>
+				<BorderBeam
+					duration={6}
+					delay={3}
+					size={600}
+					className="from-transparent via-blue-500 to-transparent"
+				/>
+			</div>
+		</div>
 	);
-}
+};
 
 export default function SuccessPage() {
 	return (

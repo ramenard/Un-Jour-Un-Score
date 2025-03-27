@@ -2,7 +2,10 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import FirstBundle from '@/components/FirstBundle';
+import SecondBundle from '@/components/SecondBundle';
+import ThirdBundle from '@/components/ThirdBundle';
+import BuyGameCoin from '@/components/BuyGameCoin';
 
 function CheckoutContent() {
 	const searchParams = useSearchParams();
@@ -13,15 +16,24 @@ function CheckoutContent() {
 	}
 
 	return (
-		<Button asChild variant="destructive" className="mr-2">
-			<form action="/api/checkout_sessions" method="POST">
-				<section>
-					<button type="submit" role="link">
-						Checkout
-					</button>
-				</section>
-			</form>
-		</Button>
+		<div className="nes-theme min-h-screen">
+			<div className="flex flex-col">
+				<div className="flex flex-row justify-between px-48 pt-20">
+					<div className="w-56">
+						<FirstBundle />
+					</div>
+					<div className="w-56">
+						<SecondBundle />
+					</div>
+					<div className="w-56">
+						<ThirdBundle />
+					</div>
+				</div>
+				<div className="pt-12 w-96 self-center pb-12">
+					<BuyGameCoin />
+				</div>
+			</div>
+		</div>
 	);
 }
 
