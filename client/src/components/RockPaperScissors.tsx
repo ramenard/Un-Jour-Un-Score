@@ -51,14 +51,47 @@ export default function RockPaperScissors() {
 
 			setResult(result);
 
-			if (result === userChoice) {
-				setTotal(total + 1);
+			switch (userChoice) {
+				case RockPaperScissorsEnum.PAPER:
+					switch (result) {
+						case RockPaperScissorsEnum.PAPER:
+							return;
+						case RockPaperScissorsEnum.ROCK:
+							setTotal(total + 1);
 
-				return;
+							return;
+						case RockPaperScissorsEnum.SCISSORS:
+							setIsFailed(true);
+							saveData();
+					}
+					break;
+				case RockPaperScissorsEnum.ROCK:
+					switch (result) {
+						case RockPaperScissorsEnum.ROCK:
+							return;
+						case RockPaperScissorsEnum.SCISSORS:
+							setTotal(total + 1);
+
+							return;
+						case RockPaperScissorsEnum.PAPER:
+							setIsFailed(true);
+							saveData();
+					}
+					break;
+				case RockPaperScissorsEnum.SCISSORS:
+					switch (result) {
+						case RockPaperScissorsEnum.SCISSORS:
+							return;
+						case RockPaperScissorsEnum.PAPER:
+							setTotal(total + 1);
+
+							return;
+						case RockPaperScissorsEnum.ROCK:
+							setIsFailed(true);
+							saveData();
+					}
+					break;
 			}
-
-			setIsFailed(true);
-			saveData();
 		},
 		[total, saveData],
 	);
