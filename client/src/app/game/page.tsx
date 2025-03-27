@@ -1,15 +1,14 @@
 'use client';
 
-import './style.css';
-import { useCallback, useEffect, useRef } from 'react';
-
+import { Suspense, useCallback, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Leaderboard } from '@/types/leaderboard';
-import { Has_played } from '@/types/has_played';
+
 import CoinFlip from '@/components/CoinFlip';
 import RockPaperScissors from '@/components/RockPaperScissors';
+import { Leaderboard } from '@/types/leaderboard';
+import { Has_played } from '@/types/has_played';
 
-export default function Game() {
+function GameContent() {
 	const searchParams = useSearchParams();
 	const gameName: string | null = searchParams.get('name');
 
@@ -17,17 +16,14 @@ export default function Game() {
 
 	const createHasPlayedIfNotExist = useCallback(async () => {
 		const leaderboard: Leaderboard = await fetchLeaderboard();
-
 		const has_played: Has_played[] = await fetchHasPlayed(leaderboard.id);
 
 		if (has_played.length) {
 			console.log('has_played exist !!');
-
 			return;
 		}
 
 		const hasPlayedCreateResponse = await createHasPlayed();
-
 		console.log(hasPlayedCreateResponse);
 	}, []);
 
@@ -39,38 +35,41 @@ export default function Game() {
 	}, [createHasPlayedIfNotExist]);
 
 	const fetchLeaderboard = async () => {
-		const leaderboardResponse = await fetch('/api/leaderboard/current', {
+		const response = await fetch('/api/leaderboard/current', {
 			method: 'GET',
 		});
-
-		return leaderboardResponse.json();
+		return response.json();
 	};
 
 	const fetchHasPlayed = async (leaderboardId: string) => {
-		const hasPlayedResponse = await fetch(
+		const response = await fetch(
 			`/api/has_played/current?leaderboardId=${leaderboardId}`,
 			{
 				method: 'GET',
 			},
 		);
-
-		return hasPlayedResponse.json();
+		return response.json();
 	};
 
 	const createHasPlayed = async () => {
-		const hasPlayedCreateResponse = await fetch(`/api/has_played/create`, {
+		const response = await fetch(`/api/has_played/create`, {
 			method: 'POST',
 		});
-
-		return hasPlayedCreateResponse.json();
+		return response.json();
 	};
 
 	return (
 		<div>
-			{(gameName ?? '') === 'coin-flip' && <CoinFlip />}
-			{(gameName ?? '') === 'rock-paper-scissors' && (
-				<RockPaperScissors />
-			)}
+			{gameName === 'coin-flip' && <CoinFlip />}
+			{gameName === 'rock-paper-scissors' && <RockPaperScissors />}
 		</div>
+	);
+}
+
+export default function Game() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<GameContent />
+		</Suspense>
 	);
 }
