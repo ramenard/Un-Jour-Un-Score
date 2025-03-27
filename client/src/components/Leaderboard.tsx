@@ -50,8 +50,8 @@ export default function Leaderboard({
 							</TableCell>
 						</TableRow>
 					)}
-					{leaderBoardData.map((data) => (
-						<TableRow key={data.username}>
+					{leaderBoardData.map((data, index) => (
+						<TableRow key={index}>
 							<TableCell className="text-white text-center">
 								{data.rankScore}
 							</TableCell>
