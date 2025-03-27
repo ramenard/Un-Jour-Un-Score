@@ -65,6 +65,13 @@ const Header: React.FC = () => {
 									variant="destructive"
 									className="mr-2"
 								>
+									<Link href="/checkout">Boutique</Link>
+								</Button>
+								<Button
+									asChild
+									variant="destructive"
+									className="mr-2"
+								>
 									<button
 										onClick={handleLogout}
 										className="nes-btn is-error"

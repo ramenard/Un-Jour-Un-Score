@@ -13,7 +13,10 @@ export class CronService {
 	private isStartGameExecuting = false;
 	private isEndGameExecuting = false;
 
-	@Cron('0 30 6 * * *', { name: 'startGame', timeZone: 'Europe/Paris' })
+	@Cron('1,11,21,31,41,51 * * * *', {
+		name: 'startGame',
+		timeZone: 'Europe/Paris',
+	})
 	async handleStartGame() {
 		if (this.isStartGameExecuting) {
 			Logger.log('Cron job already running, skipping this execution');
@@ -43,7 +46,10 @@ export class CronService {
 		}
 	}
 
-	@Cron('0 30 21 * * *', { name: 'endGame', timeZone: 'Europe/Paris' })
+	@Cron('9,19,29,39,49,59 * * * *', {
+		name: 'endGame',
+		timeZone: 'Europe/Paris',
+	})
 	async handleEndGame() {
 		if (this.isEndGameExecuting) {
 			Logger.log(
