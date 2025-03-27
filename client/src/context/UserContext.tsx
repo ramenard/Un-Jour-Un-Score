@@ -22,42 +22,43 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 	const [canUserPlay, setCanUserPlay] = useState<boolean>(false);
 
 	const fetchUser = useCallback(async () => {
-		const responseUser = await fetch('/api/user/me', { method: 'GET' });
+		try {
+			const responseUser = await fetch('/api/user/me', { method: 'GET' });
+			if (!responseUser.ok) throw new Error('Failed to fetch user');
 
-		if (!responseUser.ok) {
-			return
+			const user: User = await responseUser.json();
+
+			const responseCanPlay = await fetch('/api/user/can-play', {
+				method: 'GET',
+			});
+			if (!responseCanPlay.ok)
+				throw new Error('Failed to fetch canPlay status');
+
+			const canPlay = await responseCanPlay.json();
+
+			setUser(user);
+			setCanUserPlay(canPlay);
+		} catch (error) {
+			console.error('Error fetching user data:', error);
 		}
-
-		const user: User = await responseUser.json();
-
-		const responseCanPLay = await fetch('api/user/can-play', {
-			method: 'GET',
-		});
-
-		if (!responseCanPLay.ok) {
-			return
-		}
-		const canPlay = await responseCanPLay.json();
-
-		setUser(user);
-		setCanUserPlay(canPlay);
 	}, []);
 
 	const removeUserGameCoin = async (): Promise<void> => {
-		if (!user) {
-			return;
-		}
+		if (!user) return;
 
 		const updateUserDto: UpdateUserDto = { gameCoins: user.gameCoins - 1 };
-		await fetch('/api/user', {
-			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(updateUserDto),
-		});
-
-		await fetchUser();
+		try {
+			await fetch('/api/user', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(updateUserDto),
+			});
+			await fetchUser();
+		} catch (error) {
+			console.error('Error removing game coin:', error);
+		}
 	};
 
 	return (

@@ -12,13 +12,39 @@ export const getMe = cache(async () => {
 		throw new Error('Session not found');
 	}
 
-	const res = await fetch(`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}`, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			Authorization: `Bearer ${token}`,
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				Authorization: `Bearer ${token}`,
+			},
 		},
-	});
+	);
+
+	return res.json();
+});
+
+export const getAll = cache(async () => {
+	const session = await verifySession();
+
+	const token = (await cookies()).get('session')?.value;
+
+	if (!session || !token) {
+		throw new Error('Session not found');
+	}
+
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/users`,
+		{
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				Authorization: `Bearer ${token}`,
+			},
+		},
+	);
 
 	return res.json();
 });
@@ -78,14 +104,17 @@ export const patchUser = cache(async (updateUserDto: UpdateUserDto) => {
 		throw new Error('Session not found');
 	}
 
-	const res = await fetch(`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}`, {
-		method: 'PATCH',
-		body: JSON.stringify(updateUserDto),
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			Authorization: `Bearer ${token}`,
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}`,
+		{
+			method: 'PATCH',
+			body: JSON.stringify(updateUserDto),
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				Authorization: `Bearer ${token}`,
+			},
 		},
-	});
+	);
 
 	return await res.json();
 });
@@ -99,12 +128,15 @@ export const patchScore = cache(async (score: { score: number }) => {
 		throw new Error('Session not found');
 	}
 
-	await fetch(`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}/score`, {
-		method: 'PATCH',
-		body: JSON.stringify(score),
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			Authorization: `Bearer ${token}`,
+	await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/users/${session.user.id}/score`,
+		{
+			method: 'PATCH',
+			body: JSON.stringify(score),
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				Authorization: `Bearer ${token}`,
+			},
 		},
-	});
+	);
 });

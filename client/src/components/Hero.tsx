@@ -36,7 +36,7 @@ export default function Hero() {
 		});
 
 		if (!response.ok) {
-			return []
+			return [];
 		}
 
 		return await response.json();
@@ -50,26 +50,26 @@ export default function Hero() {
 		});
 
 		if (!response.ok) {
-			return []
+			return [];
 		}
 
 		return await response.json();
 	}, []);
 
 	const fetchCurrentGame = useCallback(async () => {
-		console.log()
+		console.log();
 		const response: Response | null = await fetch('/api/game/current', {
 			method: 'GET',
 		});
 
 		if (!response.ok) {
-			setGame(null)
+			setGame(null);
 			return;
 		}
 
 		const game: Game | null = await response.json();
 
-		setGame(game)
+		setGame(game);
 	}, []);
 
 	useEffect(() => {
@@ -115,7 +115,8 @@ export default function Hero() {
 				Un jour, un score
 			</h1>
 			<p className="nes-text is-disabled text-xl mb-8">
-				Challenge yourself daily with our unique scoring game!
+				Défie-toi chaque jour avec nos jeux et obtiens le meilleur score
+				!
 			</p>
 			<div className="flex flex-row w-full justify-between pt-10 pl-4 pr-4">
 				{leaderboardLoading || !leaderboardData.length ? (

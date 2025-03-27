@@ -4,61 +4,70 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface LineItem {
-    quantity: number;
+	quantity: number;
 }
 
 interface CheckoutData {
-    status: string;
-    amount_total: number;
-    currency: string;
-    line_items: LineItem[];
+	status: string;
+	amount_total: number;
+	currency: string;
+	line_items: LineItem[];
 }
 
 function SuccessContent() {
-    const searchParams = useSearchParams();
-    const session_id = searchParams.get('session_id');
-    const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
-    const [error, setError] = useState<string | null>(null);
+	const searchParams = useSearchParams();
+	const session_id = searchParams.get('session_id');
+	const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (session_id) {
-            fetch(`/api/checkout-success?session_id=${session_id}`)
-                .then(res => res.json())
-                .then((data: CheckoutData | { error: string }) => {
-                    if ('error' in data) {
-                        setError(data.error);
-                    } else {
-                        setCheckoutData(data);
-                    }
-                })
-                .catch(() => setError('Failed to fetch checkout data.'));
-        }
-    }, [session_id]);
+	useEffect(() => {
+		if (session_id) {
+			fetch(`/api/checkout-success?session_id=${session_id}`)
+				.then((res) => res.json())
+				.then((data: CheckoutData | { error: string }) => {
+					if ('error' in data) {
+						setError(data.error);
+					} else {
+						setCheckoutData(data);
+					}
+				})
+				.catch(() => setError('Failed to fetch checkout data.'));
+		}
+	}, [session_id]);
 
-    if (error) return <p className="text-red-500">{error}</p>;
-    if (!checkoutData) return <p className="text-white">Loading...</p>;
+	if (error) return <p className="text-red-500">{error}</p>;
+	if (!checkoutData) return <p className="text-white">Loading...</p>;
 
-    return (
-        <section id="success">
-            <p className="text-white">
-                We appreciate your business! A confirmation email will be sent. If you have any questions, please email{' '}
-                <a href="mailto:orders@example.com" className="text-white">orders@example.com</a>.
-            </p>
-            <p className="text-white">Total Amount: {checkoutData.amount_total / 100} {checkoutData.currency.toUpperCase()}</p>
-            <p className="text-white">Items Purchased:</p>
-            <ul className="text-white">
-                {checkoutData.line_items?.map((item: LineItem, index: number) => (
-                    <li key={index}>Quantity: {item.quantity}</li>
-                ))}
-            </ul>
-        </section>
-    );
+	return (
+		<section id="success">
+			<p className="text-white">
+				We appreciate your business! A confirmation email will be sent.
+				If you have any questions, please email{' '}
+				<a href="mailto:orders@example.com" className="text-white">
+					orders@example.com
+				</a>
+				.
+			</p>
+			<p className="text-white">
+				Total Amount: {checkoutData.amount_total / 100}{' '}
+				{checkoutData.currency.toUpperCase()}
+			</p>
+			<p className="text-white">Items Purchased:</p>
+			<ul className="text-white">
+				{checkoutData.line_items?.map(
+					(item: LineItem, index: number) => (
+						<li key={index}>Quantity: {item.quantity}</li>
+					),
+				)}
+			</ul>
+		</section>
+	);
 }
 
 export default function SuccessPage() {
-    return (
-        <Suspense fallback={<p>Loading...</p>}>
-            <SuccessContent />
-        </Suspense>
-    );
+	return (
+		<Suspense fallback={<p>Loading...</p>}>
+			<SuccessContent />
+		</Suspense>
+	);
 }

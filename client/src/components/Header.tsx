@@ -3,14 +3,14 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { SparklesText } from '@/components/magicui/sparkles-text';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 
-export default function Header() {
-	const { isAuth, userRole, refreshAuth } = useAuth();
-	const { user } = useUser();
+const Header: React.FC = () => {
+	const { isAuth, refreshAuth } = useAuth();
+	const { user, fetchUser } = useUser();
 	const router = useRouter();
 
 	const handleLogout = async () => {
@@ -18,6 +18,10 @@ export default function Header() {
 		await refreshAuth();
 		router.push('/');
 	};
+
+	useEffect(() => {
+		fetchUser();
+	}, [fetchUser]);
 
 	return (
 		<header className="shadow">
@@ -40,11 +44,6 @@ export default function Header() {
 						</>
 					) : (
 						<>
-							{userRole === 'Admin' && (
-								<Button asChild className="mr-2">
-									<Link href="/dashboard">Dashboard</Link>
-								</Button>
-							)}
 							<div className="flex flex-row items-center">
 								{user &&
 									[...Array(user?.gameCoins)].map((_, i) => (
@@ -53,6 +52,11 @@ export default function Header() {
 											className="nes-icon coin is-medium"
 										/>
 									))}
+								{user?.role === 'admin' && (
+									<Button asChild className="mr-2">
+										<Link href="/dashboard">Dashboard</Link>
+									</Button>
+								)}
 								<Button asChild className="mr-2">
 									<Link href="/profil">Profil</Link>
 								</Button>
@@ -75,4 +79,6 @@ export default function Header() {
 			</nav>
 		</header>
 	);
-}
+};
+
+export default Header;

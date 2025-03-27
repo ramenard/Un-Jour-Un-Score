@@ -6,19 +6,17 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { LeaderboardData } from '@/types/leaderboard';
+import { Game } from '@/types/game';
 
-export default function Leaderboard({
-	leaderBoardData,
-	isCurrentUserMode,
+export default function GamesTable({
+	gamesData,
 	tableTitle,
 }: {
-	leaderBoardData: LeaderboardData[];
-	isCurrentUserMode: boolean;
+	gamesData: Game[];
 	tableTitle: string;
 }) {
 	return (
-		<div className="flex flex-col items-start w-1/3">
+		<div className="flex flex-col items-start w-full">
 			<span className="text-white self-center text-lg font-bold">
 				{tableTitle}
 			</span>
@@ -26,56 +24,44 @@ export default function Leaderboard({
 				<TableHeader>
 					<TableRow>
 						<TableHead className="text-white text-center">
-							Rang
+							ID
 						</TableHead>
 						<TableHead className="text-white text-center">
-							Pseudo
+							Nom
 						</TableHead>
 						<TableHead className="text-white text-center">
-							Score
+							Description
+						</TableHead>
+						<TableHead className="text-white text-center">
+							Activé
+						</TableHead>
+						<TableHead className="text-white text-center">
+							Dernière activation
 						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{isCurrentUserMode && (
-						<TableRow>
+					{gamesData.map((data) => (
+						<TableRow key={data.name}>
 							<TableCell className="text-white text-center">
-								...
+								{data.id}
 							</TableCell>
 							<TableCell className="text-white text-center">
-								...
+								{data.name}
 							</TableCell>
 							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-						</TableRow>
-					)}
-					{leaderBoardData.map((data) => (
-						<TableRow key={data.username}>
-							<TableCell className="text-white text-center">
-								{data.rankScore}
+								{data.description}
 							</TableCell>
 							<TableCell className="text-white text-center">
-								{data.username}
+								{data.isActive ? 'Actif' : 'Inactif'}
 							</TableCell>
 							<TableCell className="text-white text-center">
-								{data.score}
+								{data.lastActivationDate
+									? data.lastActivationDate.toDateString()
+									: 'Jamais joué'}
 							</TableCell>
 						</TableRow>
 					))}
-					{isCurrentUserMode && (
-						<TableRow>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-						</TableRow>
-					)}
 				</TableBody>
 			</Table>
 		</div>

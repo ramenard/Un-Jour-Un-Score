@@ -6,19 +6,17 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { LeaderboardData } from '@/types/leaderboard';
+import { User } from '@/types/user';
 
-export default function Leaderboard({
-	leaderBoardData,
-	isCurrentUserMode,
+export default function UsersTable({
+	usersData,
 	tableTitle,
 }: {
-	leaderBoardData: LeaderboardData[];
-	isCurrentUserMode: boolean;
+	usersData: User[];
 	tableTitle: string;
 }) {
 	return (
-		<div className="flex flex-col items-start w-1/3">
+		<div className="flex flex-col items-start w-full">
 			<span className="text-white self-center text-lg font-bold">
 				{tableTitle}
 			</span>
@@ -26,56 +24,54 @@ export default function Leaderboard({
 				<TableHeader>
 					<TableRow>
 						<TableHead className="text-white text-center">
-							Rang
+							ID
 						</TableHead>
 						<TableHead className="text-white text-center">
 							Pseudo
 						</TableHead>
 						<TableHead className="text-white text-center">
-							Score
+							Email
+						</TableHead>
+						<TableHead className="text-white text-center">
+							Role
+						</TableHead>
+						<TableHead className="text-white text-center">
+							GameCoins
+						</TableHead>
+						<TableHead className="text-white text-center">
+							PremiumCoins
+						</TableHead>
+						<TableHead className="text-white text-center">
+							FreeCoins
 						</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{isCurrentUserMode && (
-						<TableRow>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-						</TableRow>
-					)}
-					{leaderBoardData.map((data) => (
+					{usersData.map((data) => (
 						<TableRow key={data.username}>
 							<TableCell className="text-white text-center">
-								{data.rankScore}
+								{data.id}
 							</TableCell>
 							<TableCell className="text-white text-center">
 								{data.username}
 							</TableCell>
 							<TableCell className="text-white text-center">
-								{data.score}
+								{data.email}
+							</TableCell>
+							<TableCell className="text-white text-center">
+								{data.role}
+							</TableCell>
+							<TableCell className="text-white text-center">
+								{data.gameCoins}
+							</TableCell>
+							<TableCell className="text-white text-center">
+								{data.premiumCoins}
+							</TableCell>
+							<TableCell className="text-white text-center">
+								{data.freeCoins}
 							</TableCell>
 						</TableRow>
 					))}
-					{isCurrentUserMode && (
-						<TableRow>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-							<TableCell className="text-white text-center">
-								...
-							</TableCell>
-						</TableRow>
-					)}
 				</TableBody>
 			</Table>
 		</div>

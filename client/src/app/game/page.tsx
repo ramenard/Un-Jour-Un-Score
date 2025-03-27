@@ -1,13 +1,13 @@
 'use client';
 
 import './style.css';
-import {useCallback, useEffect, useRef} from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
-import {useSearchParams} from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Leaderboard } from '@/types/leaderboard';
 import { Has_played } from '@/types/has_played';
-import CoinFlip from "@/components/CoinFlip";
-import RockPaperScissors from "@/components/RockPaperScissors";
+import CoinFlip from '@/components/CoinFlip';
+import RockPaperScissors from '@/components/RockPaperScissors';
 
 export default function Game() {
 	const searchParams = useSearchParams();
@@ -36,7 +36,6 @@ export default function Game() {
 			hasRun.current = true;
 			createHasPlayedIfNotExist();
 		}
-
 	}, [createHasPlayedIfNotExist]);
 
 	const fetchLeaderboard = async () => {
@@ -68,9 +67,7 @@ export default function Game() {
 
 	return (
 		<div>
-			{(gameName ?? '') === 'coin-flip' && (
-				<CoinFlip />
-			)}
+			{(gameName ?? '') === 'coin-flip' && <CoinFlip />}
 			{(gameName ?? '') === 'rock-paper-scissors' && (
 				<RockPaperScissors />
 			)}

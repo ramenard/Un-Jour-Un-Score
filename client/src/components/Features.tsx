@@ -7,16 +7,16 @@ import {
 
 const features = [
 	{
-		title: 'Daily Challenges',
-		description: 'New game every day to keep you engaged',
+		title: 'Défis Quotidiens',
+		description: 'Un nouveau jeu chaque jour pour vous tenir engagé',
 	},
 	{
-		title: 'Global Leaderboard',
-		description: 'Compete with players worldwide',
+		title: 'Classement Mondial',
+		description: 'Affrontez des joueurs du monde entier',
 	},
 	{
-		title: 'Random-based Scoring',
-		description: 'Fair and balanced scoring system',
+		title: 'Des jeux de random',
+		description: 'Un système de score équitable et équilibré',
 	},
 ];
 
@@ -24,9 +24,9 @@ export default function Features() {
 	return (
 		<section className="py-8">
 			<h2 className="nes-text is-disabled text-3xl font-bold text-center mb-10">
-				Game Features
+				Fonctionnalités du site
 			</h2>
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4">
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-4">
 				{features.map((feature, index) => (
 					<Card key={index}>
 						<CardHeader>

@@ -5,7 +5,7 @@ export enum UserRole {
 
 export type User = {
 	id: number;
-	userName: string;
+	username: string;
 	email: string;
 	role: UserRole;
 	gameCoins: number;

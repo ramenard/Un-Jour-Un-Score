@@ -80,19 +80,25 @@ export async function logoutServer() {
 }
 
 const createUser = async (createUserDto: CreateUserDto) => {
-	const res = await fetch(`${process.env.API_URL}${process.env.API_PORT}/security/register`, {
-		method: 'post',
-		headers: { 'Content-Type': 'application/json;charset=utf-8' },
-		body: JSON.stringify(createUserDto),
-	});
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/security/register`,
+		{
+			method: 'post',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(createUserDto),
+		},
+	);
 	return res.json();
 };
 
 const loginUser = async (loginUserDto: LoginUserDto) => {
-	const res = await fetch(`${process.env.API_URL}${process.env.API_PORT}/security/login`, {
-		method: 'post',
-		headers: { 'Content-Type': 'application/json;charset=utf-8' },
-		body: JSON.stringify(loginUserDto),
-	});
+	const res = await fetch(
+		`${process.env.API_URL}${process.env.API_PORT}/security/login`,
+		{
+			method: 'post',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify(loginUserDto),
+		},
+	);
 	return res.json();
 };
