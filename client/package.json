@@ -21,7 +21,7 @@
     "lucide-react": "^0.475.0",
     "motion": "^12.6.2",
     "nes.css": "^2.2.1",
-    "next": "^15.1.7",
+    "next": "15.1.11",
     "next-safe-action": "^7.10.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
