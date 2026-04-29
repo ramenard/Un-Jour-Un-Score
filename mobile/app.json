@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Un Jour Un Score",
+    "slug": "un-jour-un-score",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#080812"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ynov.unjourunscore"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#080812"
+      },
+      "package": "com.ynov.unjourunscore"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "scheme": "unjourunscore",
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
+  }
+}
