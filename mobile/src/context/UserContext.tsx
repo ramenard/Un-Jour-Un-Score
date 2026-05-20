@@ -45,7 +45,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const removeUserGameCoin = useCallback(async () => {
     if (!user || !userId) return;
     try {
-      const dto: UpdateUserDto = { gameCoins: user.gameCoins - 1 };
+      let dto: UpdateUserDto;
+      if (user.gameCoins > 0) {
+        dto = { gameCoins: user.gameCoins - 1 };
+      } else if (user.freeCoins > 0) {
+        dto = { freeCoins: user.freeCoins - 1 };
+      } else {
+        dto = { premiumCoins: user.premiumCoins - 1 };
+      }
       const updated = await updateUser(userId, dto);
       setUser(updated);
       const playable = await canUserPlay(userId);

@@ -25,7 +25,11 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      ["@stripe/stripe-react-native", {
+        "merchantIdentifier": "merchant.com.ynov.unjourunscore",
+        "enableGooglePay": false
+      }]
     ],
     "scheme": "unjourunscore",
     "extra": {

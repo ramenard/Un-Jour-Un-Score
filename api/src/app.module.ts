@@ -18,6 +18,7 @@ import { HasPlayed } from './has-played/entities/has-played.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
 import { DatabaseInitModule } from './database-init/database-init.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
 	imports: [
@@ -32,6 +33,9 @@ import { DatabaseInitModule } from './database-init/database-init.module';
 				password: configService.get<string>('MYSQL_ROOT_PASSWORD'),
 				database: configService.get<string>('MYSQL_DATABASE'),
 				url: configService.get<string>('MYSQL_DATABASE_URL'),
+				ssl: configService.get<string>('MYSQL_SSL') === 'true'
+					? { rejectUnauthorized: false }
+					: false,
 				entities: [
 					User,
 					Game,
@@ -55,6 +59,7 @@ import { DatabaseInitModule } from './database-init/database-init.module';
 		DatabaseInitModule,
 		CronModule,
 		ScheduleModule.forRoot(),
+		PaymentsModule,
 	],
 	controllers: [],
 	providers: [],

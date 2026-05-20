@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useStripe } from '@stripe/stripe-react-native';
 import { useAuth } from '../../src/context/AuthContext';
 import { useUser } from '../../src/context/UserContext';
-import { updateUser } from '../../src/api/users';
 import { Card } from '../../src/components/ui/Card';
 import { Button } from '../../src/components/ui/Button';
 import { LoadingSpinner } from '../../src/components/ui/LoadingSpinner';
 import { theme } from '../../src/theme';
+import { getPackages, createPaymentIntent, confirmPayment, CoinPackage } from '../../src/api/payments';
 
 function Avatar({ username }: { username: string }) {
   const initial = username.charAt(0).toUpperCase();
@@ -59,29 +60,82 @@ function RoleBadge({ role }: { role: string }) {
   );
 }
 
-const RECHARGE_AMOUNT = 3;
+function PackageCard({
+  pkg,
+  onBuy,
+  loading,
+}: {
+  pkg: CoinPackage;
+  onBuy: (pkg: CoinPackage) => void;
+  loading: boolean;
+}) {
+  const priceEur = (pkg.amount / 100).toFixed(2).replace('.', ',');
+  return (
+    <TouchableOpacity
+      style={styles.packageCard}
+      onPress={() => onBuy(pkg)}
+      disabled={loading}
+      activeOpacity={0.8}
+    >
+      <View style={styles.packageLeft}>
+        <Text style={styles.packageIcon}>💎</Text>
+        <View>
+          <Text style={styles.packageLabel}>{pkg.label}</Text>
+          <Text style={styles.packageDescription}>{pkg.description}</Text>
+        </View>
+      </View>
+      <View style={styles.packageRight}>
+        <Text style={styles.packagePrice}>{priceEur} €</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 export default function ProfileScreen() {
   const { signOut, userRole } = useAuth();
   const { userId } = useAuth();
   const { user, isLoading, fetchUser } = useUser();
-  const [recharging, setRecharging] = React.useState(false);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [packages, setPackages] = useState<CoinPackage[]>([]);
+  const [buyingPackageId, setBuyingPackageId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUser();
+    getPackages().then(setPackages).catch(() => {});
   }, [fetchUser]);
 
-  const handleRecharge = async () => {
-    if (!user || !userId) return;
-    setRecharging(true);
+  const handleBuyPackage = async (pkg: CoinPackage) => {
+    setBuyingPackageId(pkg.id);
     try {
-      await updateUser(userId, { gameCoins: user.gameCoins + RECHARGE_AMOUNT });
+      const { clientSecret, paymentIntentId } = await createPaymentIntent(pkg.id);
+
+      const { error: initError } = await initPaymentSheet({
+        paymentIntentClientSecret: clientSecret,
+        merchantDisplayName: 'Un Jour Un Score',
+        defaultBillingDetails: { email: user?.email },
+      });
+
+      if (initError) {
+        Alert.alert('Erreur', initError.message);
+        return;
+      }
+
+      const { error: presentError } = await presentPaymentSheet();
+
+      if (presentError) {
+        if (presentError.code !== 'Canceled') {
+          Alert.alert('Paiement échoué', presentError.message);
+        }
+        return;
+      }
+
+      const result = await confirmPayment(paymentIntentId);
       await fetchUser();
-      Alert.alert('Jetons rechargés', `+${RECHARGE_AMOUNT} jetons de jeu ajoutés !`);
+      Alert.alert('Achat réussi !', result.message);
     } catch {
-      Alert.alert('Erreur', 'Impossible de recharger les jetons.');
+      Alert.alert('Erreur', 'Une erreur est survenue lors du paiement.');
     } finally {
-      setRecharging(false);
+      setBuyingPackageId(null);
     }
   };
 
@@ -175,25 +229,28 @@ export default function ProfileScreen() {
           </View>
         </Card>
 
-        {/* Recharge */}
-        <Text style={styles.sectionTitle}>Jetons</Text>
-        <Card style={styles.rechargeCard} glow="gold">
-          <View style={styles.rechargeHeader}>
-            <Text style={styles.rechargeIcon}>🎮</Text>
-            <View style={styles.rechargeInfo}>
-              <Text style={styles.rechargeTitle}>Recharger les jetons</Text>
-              <Text style={styles.rechargeSubtitle}>
-                Ajoute {RECHARGE_AMOUNT} jetons de jeu à ton solde
+        {/* Boutique premium */}
+        <Text style={styles.sectionTitle}>Boutique Premium</Text>
+        <Card style={styles.shopCard} glow="gold">
+          <View style={styles.shopHeader}>
+            <Text style={styles.shopIcon}>💎</Text>
+            <View style={styles.shopInfo}>
+              <Text style={styles.shopTitle}>Acheter des jetons premium</Text>
+              <Text style={styles.shopSubtitle}>
+                Les jetons premium te donnent des parties supplémentaires
               </Text>
             </View>
           </View>
-          <Button
-            title={`+${RECHARGE_AMOUNT} jetons`}
-            onPress={handleRecharge}
-            loading={recharging}
-            fullWidth
-            style={styles.rechargeButton}
-          />
+          <View style={styles.packageList}>
+            {packages.map((pkg) => (
+              <PackageCard
+                key={pkg.id}
+                pkg={pkg}
+                onBuy={handleBuyPackage}
+                loading={buyingPackageId === pkg.id}
+              />
+            ))}
+          </View>
         </Card>
 
         {/* Actions */}
@@ -357,34 +414,72 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     lineHeight: 20,
   },
-  rechargeCard: {
+  shopCard: {
     gap: theme.spacing.md,
     borderColor: theme.colors.goldGlow,
   },
-  rechargeHeader: {
+  shopHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.md,
   },
-  rechargeIcon: {
+  shopIcon: {
     fontSize: 36,
   },
-  rechargeInfo: {
+  shopInfo: {
     flex: 1,
     gap: 2,
   },
-  rechargeTitle: {
+  shopTitle: {
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.bold,
     color: theme.colors.text,
   },
-  rechargeSubtitle: {
+  shopSubtitle: {
     fontSize: theme.fontSize.sm,
     color: theme.colors.textSecondary,
   },
-  rechargeButton: {
-    backgroundColor: theme.colors.gold,
-    shadowColor: theme.colors.gold,
+  packageList: {
+    gap: theme.spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.cardBorder,
+    paddingTop: theme.spacing.sm,
+  },
+  packageCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.md,
+    padding: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: theme.colors.cardBorder,
+  },
+  packageLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    flex: 1,
+  },
+  packageIcon: {
+    fontSize: 28,
+  },
+  packageLabel: {
+    fontSize: theme.fontSize.md,
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.text,
+  },
+  packageDescription: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textSecondary,
+  },
+  packageRight: {
+    alignItems: 'flex-end',
+  },
+  packagePrice: {
+    fontSize: theme.fontSize.lg,
+    fontWeight: theme.fontWeight.extrabold,
+    color: theme.colors.gold,
   },
   actionsCard: {
     padding: 0,

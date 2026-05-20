@@ -12,3 +12,4 @@ web-build/
 *.orig.*
 web-build/
 android/
+local.properties

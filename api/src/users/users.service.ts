@@ -95,7 +95,7 @@ export class UsersService {
 			`SELECT id
              FROM user
              WHERE id = ?
-               AND gameCoins > 0`,
+               AND (gameCoins > 0 OR freeCoins > 0 OR premiumCoins > 0)`,
 			[userId],
 		);
 
