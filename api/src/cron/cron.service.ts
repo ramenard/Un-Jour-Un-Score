@@ -13,7 +13,7 @@ export class CronService {
 	private isStartGameExecuting = false;
 	private isEndGameExecuting = false;
 
-	@Cron('1,11,21,31,41,51 * * * *', {
+	@Cron('10 3 * * *', {
 		name: 'startGame',
 		timeZone: 'Europe/Paris',
 	})
@@ -46,7 +46,7 @@ export class CronService {
 		}
 	}
 
-	@Cron('9,19,29,39,49,59 * * * *', {
+	@Cron('0 3 * * *', {
 		name: 'endGame',
 		timeZone: 'Europe/Paris',
 	})
