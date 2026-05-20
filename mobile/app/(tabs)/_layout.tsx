@@ -2,9 +2,9 @@ import { Tabs, router } from 'expo-router';
 import { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAuth } from '../../src/context/AuthContext';
-import { useUser } from '../../src/context/UserContext';
-import { theme } from '../../src/theme';
+import { useAuth } from '@/context/AuthContext';
+import { useUser } from '@/context/UserContext';
+import { theme } from '@/theme';
 
 export default function TabsLayout() {
   const { isAuth, isLoading } = useAuth();

@@ -11,12 +11,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useStripe } from '@stripe/stripe-react-native';
-import { useAuth } from '../../src/context/AuthContext';
-import { useUser } from '../../src/context/UserContext';
-import { Card } from '../../src/components/ui/Card';
-import { Button } from '../../src/components/ui/Button';
-import { LoadingSpinner } from '../../src/components/ui/LoadingSpinner';
-import { theme } from '../../src/theme';
+import { useAuth } from '@/context/AuthContext';
+import { useUser } from '@/context/UserContext';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { theme } from '@/theme';
 import { getPackages, createPaymentIntent, confirmPayment, CoinPackage } from '../../src/api/payments';
 
 function Avatar({ username }: { username: string }) {

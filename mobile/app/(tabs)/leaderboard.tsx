@@ -7,16 +7,16 @@ import {
   RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getUserLeaderboardRankings } from '../../src/api/leaderboards';
-import { getUserLeaderboardPosition } from '../../src/api/users';
-import { getCurrentGame } from '../../src/api/games';
-import { LeaderboardEntry } from '../../src/types/leaderboard';
-import { useAuth } from '../../src/context/AuthContext';
-import { useUser } from '../../src/context/UserContext';
-import { LeaderboardTable } from '../../src/components/LeaderboardTable';
-import { Card } from '../../src/components/ui/Card';
-import { LoadingSpinner } from '../../src/components/ui/LoadingSpinner';
-import { theme } from '../../src/theme';
+import { getUserLeaderboardRankings } from '@/api/leaderboards';
+import { getUserLeaderboardPosition } from '@/api/users';
+import { getCurrentGame } from '@/api/games';
+import { LeaderboardEntry } from '@/types/leaderboard';
+import { useAuth } from '@/context/AuthContext';
+import { useUser } from '@/context/UserContext';
+import { LeaderboardTable } from '@/components/LeaderboardTable';
+import { Card } from '@/components/ui/Card';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { theme } from '@/theme';
 
 export default function LeaderboardScreen() {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);

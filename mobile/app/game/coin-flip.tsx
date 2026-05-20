@@ -11,12 +11,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { saveScore } from '../../src/api/users';
-import { getCurrentLeaderboard } from '../../src/api/leaderboards';
-import { getHasPlayed, createHasPlayed } from '../../src/api/has-played';
-import { useUser } from '../../src/context/UserContext';
-import { useAuth } from '../../src/context/AuthContext';
-import { theme } from '../../src/theme';
+import { saveScore } from '@/api/users';
+import { getCurrentLeaderboard } from '@/api/leaderboards';
+import { getHasPlayed, createHasPlayed } from '@/api/has-played';
+import { useUser } from '@/context/UserContext';
+import { useAuth } from '@/context/AuthContext';
+import { theme } from '@/theme';
 
 enum CoinSide {
   HEAD = 'head',

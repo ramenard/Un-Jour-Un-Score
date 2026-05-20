@@ -6,17 +6,16 @@ import {
   StyleSheet,
   Animated,
   Modal,
-  Easing,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { saveScore } from '../../src/api/users';
-import { getCurrentLeaderboard } from '../../src/api/leaderboards';
-import { getHasPlayed, createHasPlayed } from '../../src/api/has-played';
-import { useUser } from '../../src/context/UserContext';
-import { useAuth } from '../../src/context/AuthContext';
-import { theme } from '../../src/theme';
+import { saveScore } from '@/api/users';
+import { getCurrentLeaderboard } from '@/api/leaderboards';
+import { getHasPlayed, createHasPlayed } from '@/api/has-played';
+import { useUser } from '@/context/UserContext';
+import { useAuth } from '@/context/AuthContext';
+import { theme } from '@/theme';
 
 enum RPS {
   ROCK = 'rock',
@@ -30,9 +29,9 @@ const RPS_META: Record<RPS, { emoji: string; label: string; beats: RPS; color: s
   [RPS.SCISSORS]: { emoji: '✌️', label: 'Ciseaux', beats: RPS.PAPER, color: '#a855f7' },
 };
 
-function checkWin(player: RPS, computer: RPS): 'win' | 'lose' | 'draw' {
+function checkWin(player: RPS, computer: RPS): 'win' | 'draw' | null {
   if (player === computer) return 'draw';
-  return RPS_META[player].beats === computer ? 'win' : 'lose';
+  return RPS_META[player].beats === computer ? 'win' : null;
 }
 
 export default function RockPaperScissorsScreen() {
@@ -120,7 +119,7 @@ export default function RockPaperScissorsScreen() {
             scoreRef.current += 1;
             setScore(scoreRef.current);
             animateScorePop();
-          } else if (outcome === 'lose') {
+          } else if (!outcome) {
             saveScore(userId, scoreRef.current).catch(console.error);
             setShowResult(true);
           }

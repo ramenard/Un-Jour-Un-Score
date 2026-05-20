@@ -11,14 +11,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { getCurrentGame } from '../../src/api/games';
-import { useUser } from '../../src/context/UserContext';
-import { useAuth } from '../../src/context/AuthContext';
-import { Card } from '../../src/components/ui/Card';
-import { Button } from '../../src/components/ui/Button';
-import { LoadingSpinner } from '../../src/components/ui/LoadingSpinner';
-import { Game, GAME_NAMES } from '../../src/types/game';
-import { theme } from '../../src/theme';
+import { getCurrentGame } from '@/api/games';
+import { useUser } from '@/context/UserContext';
+import { useAuth } from '@/context/AuthContext';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Game, GAME_NAMES } from '@/types/game';
+import { theme } from '@/theme';
 
 const GAME_META: Record<string, { icon: string; label: string; color: string; route: string }> = {
   [GAME_NAMES.COIN_FLIP]: {
